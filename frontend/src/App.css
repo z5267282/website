@@ -1,5 +1,4 @@
 @import "tailwindcss";
-<<<<<<< HEAD
 
 /* gelasio-regular - latin */
 @font-face {
@@ -13,5 +12,3 @@
 @theme {
   --default-font-family: "Gelasio", sans-serif;
 }
-=======
->>>>>>> 2026-fixes-bad
