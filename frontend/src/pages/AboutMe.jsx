@@ -27,7 +27,7 @@ export default function AboutMe() {
         <div className="whitespace-pre-line">
 {`Hi I'm Sunny.
 I am a developer and university course tutor at UNSW.
-I've taught some interesting things like Front-End, C++, Rust, Shell Scripting and Security.
+I've taught some interesting things like Front-End, C++, Rust, Shell Scripting and Security Engineering.
 I enjoy scripting and especially the joy of spending 3 hours to automate a task which could have been done manually in 5 minutes.
 Enjoy scrolling through!`}
         </div>
