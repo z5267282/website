@@ -45,7 +45,7 @@ export default function AboutMe() {
           journey.&nbsp;
           <HyperLink
             description="This website"
-            url="https://github.com/z5267282/blog/tree/main/website"
+            url="https://github.com/z5267282/website"
           />
           &nbsp;was written in Tailwind and React JS.
         </p>
