@@ -9,7 +9,7 @@ import LanguageHub from "./pages/LanguageHub";
 import Blog from "./pages/Blog";
 import NotFound from "./pages/NotFound";
 
-const routes = [
+export const routes = [
   {
     path: "/",
     Component: Layout,
@@ -37,5 +37,3 @@ const routes = [
     ],
   },
 ];
-
-export default routes;
