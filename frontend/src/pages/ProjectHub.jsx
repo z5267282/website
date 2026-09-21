@@ -45,7 +45,7 @@ function MvePreview() {
 function BlogMarkdownParserPreview() {
   return (
     <ProjectPreviewCard
-      url="https://github.com/z5267282/blog/tree/main/parser"
+      url="https://github.com/z5267282/website/tree/main/parser"
       title="Markdown Blog Parser"
       dates="2025"
       description="An open-source parser that takes in Markdown text and structures in into a fixed-JSON format. The blogs for this website were parsed from markdown using this parser."
