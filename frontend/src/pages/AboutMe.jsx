@@ -38,7 +38,7 @@ Enjoy scrolling through!`}
             desc="some cool things I've built, mostly in education and scripting"
           />
           <ListItemSubsectionLink
-            to="/blog"
+            to="/blogs"
             linkText="Blogs"
             desc="thoughtful prose going through an idea, opinion or review"
           />
