@@ -24,14 +24,14 @@ export default function AboutMe() {
       <div className="mt-5 h-auto w-auto">
         <Header1 content="About Me" />
         {/* prettier-ignore */}
-        <div className="whitespace-pre-line">
+        <div className="leading-loose whitespace-pre-line">
 {`Hi I'm Sunny.
 I am a developer and university course tutor at UNSW.
-I've taught some interesting things like Front-End, C++, Rust, Shell Scripting and Security Engineering.
-I enjoy scripting and especially the joy of spending 3 hours to automate a task which could have been done manually in 5 minutes.
+Some interesting things like Front-End, C++, Rust, Shell Scripting and Security Engineering.
+Personally, I like scripting and the joy of spending 3 hours to automate tasks that would take 5 minutes to do manually.
 Enjoy scrolling through!`}
         </div>
-        <ul>
+        <ul className="mt-[20px]">
           <ListItemSubsectionLink
             to="/projects"
             linkText="Projects"
@@ -49,7 +49,7 @@ Enjoy scrolling through!`}
           />
         </ul>
       </div>
-      <div className="mt-5">
+      <div className="mt-[20px]">
         <Header2 content="Links" />
         <ol className="grid w-[calc(48px*3_+_80px)] grid-cols-3">
           <li>
