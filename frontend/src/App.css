@@ -2,6 +2,8 @@
 
 :root {
   --nav-height: 35px;
+  --nav-colour: #e2edff;
+  --tab-selected-colour: #afcdff;
 }
 
 /* PT Serif - latin */
