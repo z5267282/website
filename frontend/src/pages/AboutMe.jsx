@@ -19,9 +19,9 @@ function ListItemSubsectionLink({ to, linkText, desc }) {
 
 export default function AboutMe() {
   return (
-    <div className="pt-10 pb-10 px-10 mx-0 md:mx-[10%]">
+    <div className="bg-[rgb(242,242,242)] w-screen">
       <title>sunny | home</title>
-      <div className="mt-5 h-auto w-auto">
+      <div className="bg-white m-auto max-w-[50em] p-[25px] border-r border-l border-solid border-black min-h-[calc(100dvh-35px)]">
         <Header1 content="About Me" />
         {/* prettier-ignore */}
         <div className="leading-loose whitespace-pre-line">
@@ -48,9 +48,7 @@ Enjoy scrolling through!`}
             desc="cool language-specific nuances or details I've run into"
           />
         </ul>
-      </div>
-      <div className="mt-[20px]">
-        <Header2 content="Links" />
+        <Header2 content="Links" styles="mt-[20px]" />
         <ol className="grid w-[calc(48px*3_+_80px)] grid-cols-3">
           <li>
             <LogoButton

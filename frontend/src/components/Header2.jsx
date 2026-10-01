@@ -1,3 +1,3 @@
-export default function Header2({ content }) {
-  return <h2 className="text-[1.25em]">{content}</h2>;
+export default function Header2({ content, styles = "" }) {
+  return <h2 className={`text-[1.25em] ${styles}`}>{content}</h2>;
 }
