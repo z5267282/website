@@ -19,7 +19,7 @@ function ListItemSubsectionLink({ to, linkText, desc }) {
 
 export default function AboutMe() {
   return (
-    <div className="bg-white mx-auto max-w-[50em] p-[25px] border-l-[1.25px] border-l-color-black border-r-[1.25px] border-r-color-black">
+    <main className="bg-white mx-auto max-w-[50em] p-[25px] border-l-[1.25px] border-l-color-black border-r-[1.25px] border-r-color-black">
       <title>sunny | home</title>
       <Header1 content="About Me" />
       {/* prettier-ignore */}
@@ -68,6 +68,6 @@ Enjoy scrolling through!`}
           />
         </li>
       </ol>
-    </div>
+    </main>
   );
 }
