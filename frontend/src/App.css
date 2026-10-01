@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+:root {
+  --nav-height: 35px;
+}
+
 /* PT Serif - latin */
 @font-face {
   font-display: swap;

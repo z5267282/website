@@ -2,7 +2,7 @@ import { Link, useMatch } from "react-router-dom";
 
 export default function NavBar() {
   return (
-    <nav className="bg-[#e2edff] w-screen h-[35px] flex justify-center align-center top-[0]">
+    <nav className="bg-[#e2edff] w-screen h-(--nav-height) flex justify-center align-center top-[0]">
       <ol className="w-1/2 flex flex-row justify-center align-center">
         <Tab path="/" contents="home" />
         <Tab path="/projects" contents="projects" />

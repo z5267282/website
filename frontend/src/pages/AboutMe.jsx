@@ -21,7 +21,7 @@ export default function AboutMe() {
   return (
     <div className="bg-[rgb(242,242,242)] w-screen">
       <title>sunny | home</title>
-      <div className="bg-white m-auto max-w-[50em] p-[25px] border-r border-l border-solid border-black min-h-[calc(100dvh-35px)]">
+      <div className="bg-white m-auto max-w-[50em] p-[25px] border-r border-l border-solid border-black min-h-[calc(100dvh-var(--nav-height))]">
         <Header1 content="About Me" />
         {/* prettier-ignore */}
         <div className="leading-loose whitespace-pre-line">
