@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
-/* gelasio-regular - latin */
+/* PT Serif - latin */
 @font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: "Gelasio";
+  font-display: swap;
+  font-family: "PT Serif";
   font-style: normal;
   font-weight: 400;
-  src: url("../fonts/gelasio-v14-latin-regular.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: url("../fonts/pt-serif-v19-latin-regular.woff2") format("woff2");
 }
 
 @theme {
-  --default-font-family: "Gelasio", sans-serif;
+  --default-font-family: "PT Serif", serif;
 }
