@@ -2,14 +2,14 @@ import { Link, useMatch } from "react-router-dom";
 
 export default function NavBar() {
   return (
-    <nav className="bg-(--nav-colour) grid grid-cols-[1fr_60%_1fr]">
+    <nav className="bg-(--nav-colour) grid grid-cols-[3rem_1fr] md:grid-cols-[1fr_60%_1fr]">
       <HomeButton />
       <ol className="flex flex-row justify-center">
         <Tab path="/projects" contents="projects" />
         <Tab path="/blogs" contents="blogs" />
         <Tab path="/lore" contents="lore" />
       </ol>
-      <div className="border-b-[1.25px] border-black"></div>
+      <div className="hidden md:block border-b-[1.25px] border-black"></div>
     </nav>
   );
 }
