@@ -1,7 +1,6 @@
 import { getLanguages, getBlogTitlesForLanguage } from "./unpack";
 import { blogToURL } from "./blogToURL";
 import Layout from "./Layout";
-import PanelLayout from "./PanelLayout";
 
 import AboutMe from "./pages/AboutMe";
 import ProjectHub from "./pages/ProjectHub";
@@ -16,7 +15,6 @@ export const routes = [
     Component: Layout,
     children: [
       {
-        Component: PanelLayout,
         children: [
           { index: true, Component: AboutMe },
           { path: "projects", Component: ProjectHub },
@@ -35,8 +33,8 @@ export const routes = [
         getStaticPaths: () =>
           Array.from(getLanguages()).flatMap((lang) =>
             Array.from(getBlogTitlesForLanguage(lang)).map(
-              (title) => `blogs/${lang}/${blogToURL(title)}`
-            )
+              (title) => `blogs/${lang}/${blogToURL(title)}`,
+            ),
           ),
       },
       { path: "*", Component: NotFound },
