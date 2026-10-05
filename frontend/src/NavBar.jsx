@@ -19,7 +19,7 @@ function HomeButton() {
     <div className="border-b-[1.25px] border-black hover:border-b-[2px] hover:border-b-blue-600">
       <Link
         to="/"
-        className="block w-full h-full bg-black hover:bg-yellow-300
+        className="block w-full h-full bg-black hover:bg-yellow-400
              [mask:url(/favicon.svg)_center/auto_75%_no-repeat]"
       />
     </div>
