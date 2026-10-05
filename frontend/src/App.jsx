@@ -1,6 +1,7 @@
 import { getLanguages, getBlogTitlesForLanguage } from "./unpack";
 import { blogToURL } from "./blogToURL";
 import Layout from "./Layout";
+import PanelLayout from "./PanelLayout";
 
 import AboutMe from "./pages/AboutMe";
 import ProjectHub from "./pages/ProjectHub";
@@ -14,8 +15,13 @@ export const routes = [
     path: "/",
     Component: Layout,
     children: [
-      { index: true, Component: AboutMe },
-      { path: "projects", Component: ProjectHub },
+      {
+        Component: PanelLayout,
+        children: [
+          { index: true, Component: AboutMe },
+          { path: "projects", Component: ProjectHub },
+        ],
+      },
       { path: "blogs", Component: BlogHub },
       {
         path: "blogs/:lang",

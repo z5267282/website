@@ -4,7 +4,7 @@ import ProjectPreviewCard from "../cards/ProjectPreviewCard";
 
 export default function ProjectHub() {
   return (
-    <main className="bg-white mx-auto max-w-1/2 p-[25px] border-l-[1.25px] border-black border-r-[1.25px]">
+    <>
       <title>sunny | projects</title>
       <Header1 content="My Projects" />
       <div className="flex mt-[20px] flex-col items-center gap-y-[30px]">
@@ -12,7 +12,7 @@ export default function ProjectHub() {
         <MvePreview />
         <FocusTrackerPreview />
       </div>
-    </main>
+    </>
   );
 }
 
