@@ -19,7 +19,7 @@ function ListItemSubsectionLink({ to, linkText, desc }) {
 
 export default function AboutMe() {
   return (
-    <main className="bg-white mx-auto max-w-1/2 p-[25px] border-l-[1.25px] border-l-color-black border-r-[1.25px] border-r-color-black">
+    <main className="bg-white mx-auto max-w-1/2 p-[25px] border-l-[1.25px] border-black border-r-[1.25px]">
       <title>sunny | home</title>
       <Header1 content="About Me" />
       {/* prettier-ignore */}
