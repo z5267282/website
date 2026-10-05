@@ -1,7 +1,8 @@
 import Header1 from "../components/Header1";
 import Header2 from "../components/Header2";
 import LogoButton from "../components/LogoButton";
-import ListItemSubsectionLink from "../components/ListItemSubsectionLink";
+import AlignedLink from "../components/AlignedLink";
+import AlignedLinkedList from "../components/AlignedLinksList";
 
 export default function AboutMe() {
   return (
@@ -16,23 +17,23 @@ Some interesting things like Front-End, C++, Rust, Shell Scripting and Security 
 Personally, I like scripting and the joy of spending 3 hours to automate tasks that would take 5 minutes to do manually.
 Enjoy scrolling through!`}
         </div>
-      <ul className="mt-[20px]">
-        <ListItemSubsectionLink
+      <AlignedLinkedList>
+        <AlignedLink
           to="/projects"
           linkText="Projects"
           desc="some cool things I've built, mostly in education and scripting"
         />
-        <ListItemSubsectionLink
+        <AlignedLink
           to="/blogs"
           linkText="Blogs"
           desc="thoughtful prose going through an idea, opinion or review"
         />
-        <ListItemSubsectionLink
+        <AlignedLink
           to="/lore"
           linkText="Lore"
           desc="cool language-specific nuances or details I've run into"
         />
-      </ul>
+      </AlignedLinkedList>
       <Header2 content="Links" styles="mt-[20px]" />
       <ol className="grid w-[calc(48px*3_+_80px)] grid-cols-3">
         <li>

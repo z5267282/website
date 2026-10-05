@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 
-export default function ListItemSubsectionLink({ to, linkText, desc }) {
+export default function AlignedLink({ to, linkText, desc }) {
   return (
-    <li>
+    <>
       <Link
         className="inline text-blue-500 underline hover:text-blue-700"
         to={to}
@@ -10,6 +10,6 @@ export default function ListItemSubsectionLink({ to, linkText, desc }) {
         {linkText}
       </Link>
       <span>: {desc}</span>
-    </li>
+    </>
   );
 }
