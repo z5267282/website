@@ -4,4 +4,4 @@
 pub const MARKDOWN: &str = "../content/lore";
 
 /// JSON dump of parsed blogs.
-pub const JSON: &str = "../website/src/blog-lang.json";
+pub const JSON: &str = "../frontend/src/blog-lang.json";
