@@ -1,4 +1,4 @@
-//! Paths for dump files where parser/ is considered as root
+//! Paths for dump files where parser/ is considered as current folder
 
 /// Blogs stored in Markdown format.
 pub const MARKDOWN: &str = "../content/lore";
