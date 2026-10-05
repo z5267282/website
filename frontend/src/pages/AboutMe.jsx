@@ -1,21 +1,7 @@
-import { Link } from "react-router-dom";
 import Header1 from "../components/Header1";
 import Header2 from "../components/Header2";
 import LogoButton from "../components/LogoButton";
-
-function ListItemSubsectionLink({ to, linkText, desc }) {
-  return (
-    <li>
-      <Link
-        className="inline text-blue-500 underline hover:text-blue-700"
-        to={to}
-      >
-        {linkText}
-      </Link>
-      <span>: {desc}</span>
-    </li>
-  );
-}
+import ListItemSubsectionLink from "../components/ListItemSubsectionLink";
 
 export default function AboutMe() {
   return (
