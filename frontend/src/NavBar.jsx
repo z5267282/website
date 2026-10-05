@@ -2,10 +2,9 @@ import { Link, useMatch } from "react-router-dom";
 
 export default function NavBar() {
   return (
-    <nav className="bg-(--nav-colour) grid grid-cols-[1fr_50%_1fr]">
+    <nav className="bg-(--nav-colour) grid grid-cols-[1fr_60%_1fr]">
       <HomeButton />
       <ol className="flex flex-row justify-center">
-        <Tab path="/" contents="home" />
         <Tab path="/projects" contents="projects" />
         <Tab path="/blogs" contents="blogs" />
         <Tab path="/lore" contents="lore" />
@@ -17,11 +16,13 @@ export default function NavBar() {
 
 function HomeButton() {
   return (
-    <Link
-      to="/"
-      className="border-b-[1.25px] border-black bg-black hover:bg-yellow-300
+    <div className="border-b-[1.25px] border-black hover:border-b-[2px] hover:border-b-blue-600">
+      <Link
+        to="/"
+        className="block w-full h-full bg-black hover:bg-yellow-300
              [mask:url(/favicon.svg)_center/auto_75%_no-repeat]"
-    />
+      />
+    </div>
   );
 }
 
