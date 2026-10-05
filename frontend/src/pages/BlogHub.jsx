@@ -8,17 +8,15 @@ export default function BlogHub() {
   languages.sort();
 
   return (
-    <div className="min-h-screen">
+    <>
       <title>sunny | blogs</title>
-      <div className="flex justify-center items-center h-[calc(1.5em_+20px)] pt-[20px]">
-        <Header1 content="Language-Semantic Blogs" />
-      </div>
-      <ul className="mt-10 w-full h-auto flex flex-col items-center gap-y-[20px]">
+      <Header1 content="Language-Semantic Blogs" />
+      <ul className="mt-10 flex flex-col items-center gap-y-[20px]">
         {languages.map((language) => (
           <LanguageLinkCard language={language} key={`hub-${language}`} />
         ))}
       </ul>
-    </div>
+    </>
   );
 }
 
