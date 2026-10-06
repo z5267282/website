@@ -34,6 +34,19 @@ The parser runs on the following expectations:
 - there is a blank line to end a particular markdown feature;
 - the Markdown has been correctly formatted
 
+### Frontmatter
+
+All Markdown files are expected to contain the following frontmatter.
+
+```yaml
+title: required - title of document to show on screen
+date: yyyy-mm-dd
+description: required
+draft: true|false
+```
+
+The frontmatter should be enclosed with `---` and be at the top of the file.
+
 ### Supported - ✅
 
 #### Headings
