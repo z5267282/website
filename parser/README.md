@@ -1,7 +1,7 @@
 # Overview
 
-This is a markdown parser for Markdown test, written in Rust.  
-The full json schema is written [here](./json_schema.md).
+This crate parses Markdown text into structured JSON. The full json schema is
+written [here](./json_schema.md).
 
 This command will create the file `../website/public/blogs.json`.
 
@@ -9,9 +9,10 @@ This command will create the file `../website/public/blogs.json`.
 cargo run
 ```
 
-## Options
+## Flags
 
-To add logging, prefix with this argument.
+To add logging the `RUST_LOG` environment variable needs to be set. For
+convenience, this Shell script can be used to run with logs after building.
 
 ```sh
 RUST_LOG=info ./target/debug/parser
@@ -23,18 +24,19 @@ To turn on pretty printing, add this argument.
 cargo run -- --pretty
 ```
 
-# Formatting
+## Supported Markdown Language Features
 
-It is expected there is a blank line to end a particular markdown feature.
+Not all language features are supported. The full list of features was taken
+from [markdownguide](https://www.markdownguide.org/basic-syntax/).
 
-# Supported Markdown Language Features
+The parser runs on the following expectations:
 
-Not all language features are supported.  
-The full list of features was taken from [markdownguide](https://www.markdownguide.org/basic-syntax/).
+- there is a blank line to end a particular markdown feature;
+- the Markdown has been correctly formatted
 
-## Supported - ✅
+### Supported - ✅
 
-### Headings
+#### Headings
 
 These must start with leading `'#'` characters followed by one spacebar `' '`.  
 There must also be a blank line before and after a heading.
@@ -45,7 +47,7 @@ There must also be a blank line before and after a heading.
 
 ```
 
-### Paragraphs and Line Breaks
+#### Paragraphs and Line Breaks
 
 A blank line is needed to separate paragraphs.  
 Two lines forces a newline.
@@ -57,7 +59,7 @@ Paragraph 1 sentence 2.
 Paragraph 2.
 ```
 
-### Ordered Lists
+#### Ordered Lists
 
 These must start with a number and then a `'.'`.  
 It is assumed that the lists are correctly enumerated from `[1,n]` for an `n`-sized list.
@@ -67,7 +69,7 @@ It is assumed that the lists are correctly enumerated from `[1,n]` for an `n`-si
 2. two
 ```
 
-### Unordered Lists
+#### Unordered Lists
 
 These must start with `'- '`.
 
@@ -76,11 +78,11 @@ These must start with `'- '`.
 - orange
 ```
 
-### Code Blocks
+#### Code Blocks
 
-If a language is provided it must be directly after the ` "```" `.
+If a language is provided it must be directly after the `"```"`.
 
-### Tables
+#### Tables
 
 Tables must be formatted like so.
 
@@ -101,16 +103,16 @@ All content has its leading and trailing whitespace trimmed so the rows above ar
 ]
 ```
 
-## Frontend Rendered
+### Frontend Rendered
 
-These are supported if nested inside a paragraph.  
-They will be parsed by the frontend as they only involve simple single-line string manipulations.
+These are supported if nested inside a paragraph. They will be rendered by the
+frontend as they only involve simple single-line string manipulations.
 
 - Links
 - Bold Text, where asterisks are used `** bold text **`
 - Inline Code Bacticks
 
-## Unsupported - ❌
+### Unsupported - ❌
 
 - Italic Text
 - Strikethrough
@@ -118,7 +120,3 @@ They will be parsed by the frontend as they only involve simple single-line stri
 - Horizontal Rules
 - Images
 - HTML
-
-# Assumptions
-
-It is assumed that the Markdown is correctly formatted.
