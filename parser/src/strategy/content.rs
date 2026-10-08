@@ -1,5 +1,6 @@
 //! Parses the structured content folder, which contains exactly two subfolders: `blog` and `lore`.
 
+use std::error::Error;
 use std::path::{Path, PathBuf};
 
 use super::Strategy;
@@ -33,7 +34,7 @@ impl Content {
 }
 
 impl Strategy for Content {
-    fn run(&self) -> Result<(), std::io::Error> {
+    fn run(&self) -> Result<(), Box<dyn Error>> {
         let markdown = Path::new(MARKDOWN);
         let json = Path::new(JSON);
         dump_blogs(markdown, json, self.pretty)

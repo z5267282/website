@@ -5,7 +5,11 @@
 
 pub mod dump_file;
 
+pub mod error;
+
 pub mod html_element;
+
+pub mod metadata;
 
 pub mod paths;
 

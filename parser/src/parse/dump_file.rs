@@ -2,11 +2,14 @@
 //! It will parse the Markdown text for all blogs in `../blog` and create a combined JSON file in `../website/src`.
 
 use log::info;
+use std::error::Error;
 use std::fs::{read_dir, read_to_string, File};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
 use serde_json::{to_string, to_string_pretty};
+
+use crate::parse::metadata::Metadata;
 
 use super::html_element::HTMLElement;
 use super::to_html::parse_markdown;
@@ -92,7 +95,7 @@ pub fn dump_blogs(
     markdown_blog_folder: &Path,
     json_dump_path: &Path,
     pretty: bool,
-) -> Result<(), std::io::Error> {
+) -> Result<(), Box<dyn Error>> {
     info!("commencing dump of markdown blogs to json");
     info!(
         "iterating through all languages in {}",
@@ -137,17 +140,24 @@ pub fn dump_blogs(
 /// If there was an error reading the file from path.
 ///
 /// # Examples
-fn parse_blog(path: &PathBuf) -> Result<Vec<HTMLElement>, std::io::Error> {
+fn parse_blog(path: &PathBuf) -> Result<Vec<HTMLElement>, Box<dyn Error>> {
     info!("loading markdown from {}", path.display());
-    let markdown = read_to_string(path)?
-        .lines()
-        .map(|s| s.to_string())
-        .collect::<Vec<String>>();
+    let (metadata, markdown) = parse_metadata_and_content(path)?;
 
     info!("markdown loaded, preparing to parse");
     let json = parse_markdown(&markdown);
     info!("parsed json successfully from {}", path.display());
     Ok(json)
+}
+
+fn parse_metadata_and_content(path: &PathBuf) -> Result<(Metadata, Vec<String>), Box<dyn Error>> {
+    // this has metadata and then content
+    let all_lines = read_to_string(path)?
+        .lines()
+        .map(|s| s.to_string())
+        .collect::<Vec<String>>();
+
+    todo!();
 }
 
 /// Extracts the basename from a path and returns it as a `String`.

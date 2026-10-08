@@ -1,6 +1,6 @@
 //! Parses a single Markdown file into a single JSON file.
 
-use std::path::PathBuf;
+use std::{error::Error, path::PathBuf};
 
 use super::Strategy;
 
@@ -21,7 +21,7 @@ impl Standalone {
 }
 
 impl Strategy for Standalone {
-    fn run(&self) -> Result<(), std::io::Error> {
+    fn run(&self) -> Result<(), Box<dyn Error>> {
         todo!()
     }
 
