@@ -3,4 +3,8 @@
 # run in root-level of frontend folder
 # go back to root-level of website
 cd ..
-git clone --depth 1 https://github.com/z5267282/content.git
+
+[ -d content] && rm -rf content
+mkdir content
+curl -fL https://github.com/z5267282/content/archive/refs/heads/main.tar.gz \
+  | tar -xz --strip-components=1 -C content
