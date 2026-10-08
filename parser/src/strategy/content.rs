@@ -284,7 +284,7 @@ fn gen_cannot_extract_basename(path: &Path) -> std::io::Error {
 /// # Errors
 /// If there was an error serializing the parsed data to a JSON string.
 fn dump_to_str(parsed: &Vec<LanguageDump>, pretty: bool) -> Result<String, std::io::Error> {
-    info!("preparing to parse markdown");
+    info!("preparing to dump markdown");
     let dumper = if pretty {
         to_string_pretty::<Vec<LanguageDump>>
     } else {
@@ -297,7 +297,7 @@ fn dump_to_str(parsed: &Vec<LanguageDump>, pretty: bool) -> Result<String, std::
             e
         ))
     })?;
-    info!("markdown parsed");
+    info!("markdown dumped");
     Ok(dumped)
 }
 
