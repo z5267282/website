@@ -16,12 +16,20 @@ use serde_json::{to_string, to_string_pretty};
 use serde_saphyr::from_str;
 
 use super::Strategy;
-use crate::parse::paths::{JSON, MARKDOWN};
 
 use crate::parse::error::MetadataError;
 use crate::parse::html_element::HTMLElement;
 use crate::parse::metadata::Metadata;
 use crate::parse::to_html::parse_markdown;
+
+/// Paths for dump files where `parser/`` is considered as current folder
+pub mod paths {
+    /// content stored in Markdown format.
+    pub const MARKDOWN: &str = "../content/lore";
+
+    /// JSON dump of parsed blogs.
+    pub const JSON: &str = "../frontend/src/blog-lang.json";
+}
 
 /// Line that opens and closes the YAML metadata block at the top of a blog.
 const METADATA_DELIMITER: &str = "---";
@@ -88,9 +96,13 @@ impl Strategy for Content {
     ///     NamedTempFile::with_suffix(".json").expect("could not create temporary blog file")
     /// }
     ///
-    /// let contents = r#"# Overview
+    /// let contents = r#"---
+    /// title: Sample Markdown
+    /// date: 2026-01-01
+    /// description: A sample Markdown file to present for the content strategy doctest
+    /// ---
     ///
-    /// This is a sample blog.  
+    /// This is a sample Markdown file.  
     /// No further content.
     ///
     /// "#;
@@ -106,24 +118,17 @@ impl Strategy for Content {
     ///     .read_to_string(&mut dump_contents)
     ///     .expect("could not read dumped file");
     ///
-    /// assert!(&dump_contents.contains("Overview"));
-    /// assert!(&dump_contents.contains("This is a sample blog."));
+    /// assert!(&dump_contents.contains("This is a sample Markdown file."));
     /// assert!(&dump_contents.contains("No further content."));
     /// ```
     fn run(&self) -> Result<(), Box<dyn Error>> {
-        let markdown_blog_folder = Path::new(MARKDOWN);
-        let json_dump_path = Path::new(JSON);
-        info!(
-            "commencing dump of {} to json",
-            markdown_blog_folder.display()
-        );
-        info!(
-            "iterating through all languages in {}",
-            markdown_blog_folder.display()
-        );
+        // let markdown_blog_folder = Path::new(MARKDOWN);
+        // let json_dump_path = Path::new(JSON);
+        info!("commencing dump of {} to json", self.root.display());
+        info!("iterating through all languages in {}", self.root.display());
 
         let mut parsed: Vec<LanguageDump> = vec![];
-        for try_lang in read_dir(markdown_blog_folder)? {
+        for try_lang in read_dir(&self.root)? {
             let lang = try_lang?.path();
             if !lang.is_dir() {
                 continue;
@@ -144,10 +149,10 @@ impl Strategy for Content {
             parsed.push(language);
         }
 
-        let mut file = File::create(json_dump_path)?;
+        let mut file = File::create(&self.output)?;
         let dump = dump_to_str(&parsed, self.pretty)?;
         file.write_all(dump.as_bytes())?;
-        info!("dumped file {}", json_dump_path.display());
+        info!("dumped file {}", self.output.display());
         Ok(())
     }
 

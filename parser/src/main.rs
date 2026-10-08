@@ -1,4 +1,5 @@
 use clap::{ArgAction, Parser};
+use parser::strategy::content::paths::{JSON, MARKDOWN};
 use parser::strategy::content::Content;
 use parser::strategy::standalone::Standalone;
 use parser::strategy::Strategy;
@@ -10,7 +11,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     env_logger::init();
 
     let standalone = Standalone::new(PathBuf::from("TODO"), PathBuf::from("TODO"), args.pretty);
-    let content = Content::new(PathBuf::from("TODO"), PathBuf::from("TODO"), args.pretty);
+    let content = Content::new(PathBuf::from(MARKDOWN), PathBuf::from(JSON), args.pretty);
 
     let strategy: &dyn Strategy = if args.one { &standalone } else { &content };
     strategy.run()?;
