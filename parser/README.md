@@ -39,10 +39,9 @@ The parser runs on the following expectations:
 All Markdown files are expected to contain the following frontmatter.
 
 ```yaml
-title: required - title of document to show on screen
+title: title of document to show on screen
 date: yyyy-mm-dd
-description: required
-draft: true|false
+description: brief description of file
 ```
 
 The frontmatter should be enclosed with `---` and be at the top of the file.
