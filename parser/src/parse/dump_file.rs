@@ -8,8 +8,13 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 
 use serde_json::{to_string, to_string_pretty};
+use serde_saphyr::from_str;
 
+use crate::parse::error::MetadataError;
 use crate::parse::metadata::Metadata;
+
+/// Line that opens and closes the YAML metadata block at the top of a blog.
+const METADATA_DELIMITER: &str = "---";
 
 use super::html_element::HTMLElement;
 use super::to_html::parse_markdown;
@@ -141,15 +146,23 @@ pub fn dump_blogs(
 ///
 /// # Examples
 fn parse_blog(path: &PathBuf) -> Result<Vec<HTMLElement>, Box<dyn Error>> {
-    info!("loading markdown from {}", path.display());
+    info!("loading metadata and markdown from {}", path.display());
     let (metadata, markdown) = parse_metadata_and_content(path)?;
 
-    info!("markdown loaded, preparing to parse");
+    info!("metadata and markdown loaded, preparing to parse");
     let json = parse_markdown(&markdown);
     info!("parsed json successfully from {}", path.display());
     Ok(json)
 }
 
+/// Splits a blog file into its YAML metadata and its Markdown content.
+/// The metadata is enclosed between a `---` on the first line and the next `---` line.
+///
+/// # Arguments
+/// * `path` - The path to the blog file.
+///
+/// # Errors
+/// If the file could not be read, or a `MetadataError` if the metadata is missing or invalid.
 fn parse_metadata_and_content(path: &PathBuf) -> Result<(Metadata, Vec<String>), Box<dyn Error>> {
     // this has metadata and then content
     let all_lines = read_to_string(path)?
@@ -157,7 +170,25 @@ fn parse_metadata_and_content(path: &PathBuf) -> Result<(Metadata, Vec<String>),
         .map(|s| s.to_string())
         .collect::<Vec<String>>();
 
-    todo!();
+    let metadata_error = || MetadataError::new(path.clone());
+
+    if all_lines.first().map(|line| line.trim()) != Some(METADATA_DELIMITER) {
+        return Err(Box::new(metadata_error()));
+    }
+
+    let end = all_lines
+        .iter()
+        .skip(1)
+        .position(|line| line.trim() == METADATA_DELIMITER)
+        .map(|i| i + 1)
+        .ok_or_else(metadata_error)?;
+
+    let yaml = all_lines[1..end].join("\n");
+    let metadata: Metadata = from_str(&yaml).map_err(|_| metadata_error())?;
+    let content = all_lines[end + 1..].to_vec();
+
+    info!("parsed metadata from {} as {metadata:?}", path.display());
+    Ok((metadata, content))
 }
 
 /// Extracts the basename from a path and returns it as a `String`.
