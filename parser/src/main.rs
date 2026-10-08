@@ -1,4 +1,4 @@
-use clap::{ArgAction, Parser};
+use clap::Parser;
 use parser::strategy::content::paths::{JSON, MARKDOWN};
 use parser::strategy::content::Content;
 use parser::strategy::standalone::Standalone;
@@ -10,10 +10,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     let args = Args::parse();
     env_logger::init();
 
-    let standalone = Standalone::new(PathBuf::from("TODO"), PathBuf::from("TODO"), args.pretty);
-    let content = Content::new(PathBuf::from(MARKDOWN), PathBuf::from(JSON), args.pretty);
-
-    let strategy: &dyn Strategy = if args.one { &standalone } else { &content };
+    let strategy: Box<dyn Strategy> = match (args.src, args.dst) {
+        (Some(src), Some(dst)) => Box::new(Standalone::new(src, dst, args.pretty)),
+        (None, None) => Box::new(Content::new(PathBuf::from(MARKDOWN), PathBuf::from(JSON), args.pretty)),
+        _ => unreachable!("clap enforces that src and dst are given together"),
+    };
     strategy.run()?;
     strategy.print_success();
 
@@ -21,21 +22,20 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 
 /// Command line arguments for the blog parser.
+///
+/// With no paths, the whole `content` folder is parsed.
+/// With both `SRC` and `DST`, a single markdown file is parsed instead.
 #[derive(Parser, Debug)]
 struct Args {
     /// Whether to pretty-print the JSON output.
-    #[arg(short, long, action = ArgAction::SetTrue)]
+    #[arg(short, long)]
     pretty: bool,
 
-    /// Parse a single markdown file instead of the whole `content` folder.
-    #[arg(long, action = ArgAction::SetTrue, requires_all = ["src", "dst"])]
-    one: bool,
-
-    /// Path to the source markdown file (requires --one).
-    #[arg(requires = "one")]
+    /// Path to the source markdown file.
+    #[arg(requires = "dst")]
     src: Option<PathBuf>,
 
-    /// Path to write the JSON output to (requires --one).
-    #[arg(requires = "one")]
+    /// Path to write the JSON output to.
+    #[arg(requires = "src")]
     dst: Option<PathBuf>,
 }
