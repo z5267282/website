@@ -122,8 +122,6 @@ impl Strategy for Content {
     /// assert!(&dump_contents.contains("No further content."));
     /// ```
     fn run(&self) -> Result<(), Box<dyn Error>> {
-        // let markdown_blog_folder = Path::new(MARKDOWN);
-        // let json_dump_path = Path::new(JSON);
         info!("commencing dump of {} to json", self.root.display());
         info!("iterating through all languages in {}", self.root.display());
 
