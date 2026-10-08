@@ -9,6 +9,4 @@ pub mod html_element;
 
 pub mod metadata;
 
-pub mod paths;
-
 pub mod to_html;
