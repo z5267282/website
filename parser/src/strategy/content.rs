@@ -321,23 +321,6 @@ mod tests {
         };
     }
 
-    // TODO: fix this so that it's a doctest in dump - also need a type that is serialisable
-    // #[test]
-    // fn test_dump_to_str_not_pretty() {
-    //     let parsed = vec![LanguageDump {
-    //         language: "cpp".to_string(),
-    //         blogs: vec![Blog {
-    //             title: "My Blog Post".to_string(),
-    //             html: vec![HTMLElement::Paragraph {
-    //                 lines: vec!["This is the content of my blog post.".to_string()],
-    //             }],
-    //         }],
-    //     }];
-    //     let json = dump_to_str(&parsed, false).expect("Failed to dump to JSON");
-    //     assert!(json.contains("My Blog Post"));
-    //     assert!(json.contains("This is the content of my blog post."));
-    // }
-
     #[test]
     fn test_cannot_extract_basename() {
         let path = PathBuf::from("my-blog-post.md");
