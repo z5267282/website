@@ -1,17 +1,23 @@
-//! Parses every Markdown file under a content root of the form
+//! Parses a content root of the form
 //! ```txt
 //! root/
 //!     blog/
+//!         + interesting-topic.md
 //!     lore/
-//!         lang/
+//!         :lang/
+//!             + langauge-semantic topic.md
+//!         + lore.yaml
 //! ```
+//! into an output folder with the same structure, where every Markdown file becomes a JSON file
+//! and `lore/lore.yaml` becomes `lore/lore.json`.
 
-use log::info;
+use log::{info, warn};
+use std::collections::BTreeMap;
 use std::error::Error;
-use std::fs::{read_dir, read_to_string, File};
-use std::io::Write;
+use std::fs::{create_dir_all, read_dir, read_to_string, write};
 use std::path::{Path, PathBuf};
 
+use serde::Serialize;
 use serde_saphyr::from_str;
 
 use super::Strategy;
@@ -24,12 +30,21 @@ use crate::parse::to_html::parse_markdown;
 
 /// Paths for dump files where `parser/`` is considered as current folder
 pub mod paths {
-    /// content stored in Markdown format.
-    pub const MARKDOWN: &str = "../content/lore";
+    /// Root of the content folder, stored in Markdown format.
+    pub const ROOT: &str = "../content";
 
-    /// JSON dump of parsed blogs.
-    pub const JSON: &str = "../frontend/src/blog-lang.json";
+    /// Folder that mirrors the content folder, holding the parsed JSON files.
+    pub const OUTPUT_DIR: &str = "../frontend/src/content";
 }
+
+/// Path of the file holding a one-line qwip for each lore language, relative to the content root.
+const LORE_FILE: &str = "lore/lore.yaml";
+
+/// Extension of the Markdown files to parse.
+const MARKDOWN_EXTENSION: &str = "md";
+
+/// Extension given to every dumped file.
+const JSON_EXTENSION: &str = "json";
 
 /// Line that opens and closes the YAML metadata block at the top of a blog.
 const METADATA_DELIMITER: &str = "---";
@@ -51,48 +66,104 @@ impl Content {
             pretty,
         }
     }
+
+    /// Recursively dumps every file under a folder, mirroring it into the output folder.
+    ///
+    /// # Arguments
+    /// * `dir` - A folder inside the content root.
+    ///
+    /// # Errors
+    /// If there was an error reading, parsing or dumping any file under the folder.
+    fn dump_dir(&self, dir: &Path) -> Result<(), Box<dyn Error>> {
+        let out_dir = self.output_path(dir)?;
+        info!("creating output folder {}", out_dir.display());
+        create_dir_all(&out_dir)?;
+
+        for entry in read_dir(dir)? {
+            let path = entry?.path();
+            if path.is_dir() {
+                self.dump_dir(&path)?;
+            } else if path == self.root.join(LORE_FILE) {
+                self.dump_file(&path, &parse_lore(&path)?)?;
+            } else if path
+                .extension()
+                .is_some_and(|ext| ext == MARKDOWN_EXTENSION)
+            {
+                self.dump_file(&path, &parse_blog(&path)?)?;
+            } else {
+                warn!("skipping unrecognised file {}", path.display());
+            }
+        }
+        Ok(())
+    }
+
+    /// Writes a parsed object to the JSON file mirroring its source file.
+    ///
+    /// # Arguments
+    /// * `src` - The path of the source file inside the content root.
+    /// * `object` - The parsed contents of the source file.
+    ///
+    /// # Errors
+    /// If there was an error serialising the object or writing the file.
+    fn dump_file<T: Serialize>(&self, src: &Path, object: &T) -> Result<(), Box<dyn Error>> {
+        let dst = self.output_path(src)?.with_extension(JSON_EXTENSION);
+        write(&dst, dump_to_str(object, self.pretty)?)?;
+        info!("dumped {} to {}", src.display(), dst.display());
+        Ok(())
+    }
+
+    /// Maps a path inside the content root to the same relative path inside the output folder.
+    ///
+    /// # Arguments
+    /// * `src` - The path inside the content root.
+    ///
+    /// # Errors
+    /// If the path is not inside the content root.
+    fn output_path(&self, src: &Path) -> Result<PathBuf, Box<dyn Error>> {
+        Ok(self.output.join(src.strip_prefix(&self.root)?))
+    }
 }
 
 impl Strategy for Content {
-    /// Dumps all blogs from storage into a JSON file. Blogs are stored as Markdown files.
-    ///
-    /// # Arguments
-    /// * `pretty` - If true, the JSON output will be pretty-printed.
+    /// Parses every file in the content folder into a JSON file at the same relative path in the
+    /// output folder. Markdown blogs are parsed into their metadata and HTML, and the lore file is
+    /// parsed into an object mapping each language to its qwip.
     ///
     /// # Errors
-    /// If there was an error reading blog files or writing blogs to JSON.
+    /// If there was an error reading content files or writing them to JSON.
     ///
     /// # Examples
     /// ```
-    /// use std::fs::{create_dir, File};
-    /// use std::io::{Read, Write};
+    /// use std::fs::{create_dir_all, read_to_string, write};
     /// use std::path::PathBuf;
-    /// use tempfile::{tempdir, NamedTempFile, TempDir};
+    /// use tempfile::{tempdir, TempDir};
     ///
-    /// use parser::strategy::Strategy;
-    /// use parser::strategy::content::Content;
+    /// # use parser::strategy::Strategy;
+    /// # use parser::strategy::content::Content;
     ///
-    /// /// Create a temporary folder as the root of blogs for testing.
+    /// /// Create a temporary folder as the content root for testing.
     /// /// The structure will be
     /// /// ```txt
     /// /// root/
-    /// ///     blogs/
+    /// ///     blog/
     /// ///         + example-blog.md
+    /// ///     lore/
+    /// ///         shell/
+    /// ///             + example-lore.md
+    /// ///         + lore.yaml
     /// /// ```
-    /// fn setup_testing_blogs(contents: &str) -> TempDir {
+    /// fn setup_testing_content(contents: &str) -> TempDir {
     ///     let root = tempdir().expect("could not create temporary directory");
-    ///     let blogs_path = root.path().join("blogs");
-    ///     create_dir(&blogs_path).expect("could not create blogs subfolder");
+    ///     let blog = root.path().join("blog");
+    ///     let shell = root.path().join("lore").join("shell");
+    ///     create_dir_all(&blog).expect("could not create blog subfolder");
+    ///     create_dir_all(&shell).expect("could not create lore subfolder");
     ///
-    ///     let blog_path = blogs_path.join("example-blog.md");
-    ///     let mut blog = File::create(blog_path).expect("could not create temporary blog file");
-    ///
-    ///     blog.write(contents.as_bytes()).expect("could not write blog contents");
+    ///     write(blog.join("example-blog.md"), contents).expect("could not write blog");
+    ///     write(shell.join("example-lore.md"), contents).expect("could not write lore");
+    ///     write(root.path().join("lore").join("lore.yaml"), "shell: POSIX is a lie :)\n")
+    ///         .expect("could not write lore file");
     ///     root
-    /// }
-    ///
-    /// fn create_json_dump_file() -> NamedTempFile {
-    ///     NamedTempFile::with_suffix(".json").expect("could not create temporary blog file")
     /// }
     ///
     /// let contents = r#"---
@@ -101,56 +172,34 @@ impl Strategy for Content {
     /// description: A sample Markdown file to present for the content strategy doctest
     /// ---
     ///
-    /// This is a sample Markdown file.  
+    /// This is a sample Markdown file.
     /// No further content.
     ///
     /// "#;
     ///
-    /// let blogs = setup_testing_blogs(contents);
-    /// let mut dump_file = create_json_dump_file();
+    /// let content = setup_testing_content(contents);
+    /// let output = tempdir().expect("could not create output directory");
     ///
-    /// let worker = Content::new(PathBuf::from(blogs.path()),PathBuf::from(dump_file.path()), false);
+    /// let worker = Content::new(PathBuf::from(content.path()), PathBuf::from(output.path()), false);
+    /// worker.run().expect("failed to dump content");
     ///
-    /// worker.run().expect("failed to dump blogs");
-    /// let mut dump_contents = String::new();
-    /// &mut dump_file
-    ///     .read_to_string(&mut dump_contents)
-    ///     .expect("could not read dumped file");
+    /// for blog in ["blog/example-blog.json", "lore/shell/example-lore.json"] {
+    ///     let dumped = read_to_string(output.path().join(blog)).expect("could not read dumped blog");
+    ///     assert!(dumped.contains("Sample Markdown"));
+    ///     assert!(dumped.contains("This is a sample Markdown file."));
+    ///     assert!(dumped.contains("No further content."));
+    /// }
     ///
-    /// assert!(&dump_contents.contains("This is a sample Markdown file."));
-    /// assert!(&dump_contents.contains("No further content."));
+    /// let lore = read_to_string(output.path().join("lore/lore.json")).expect("could not read lore");
+    /// assert_eq!(lore, r#"{"shell":"POSIX is a lie :)"}"#);
     /// ```
     fn run(&self) -> Result<(), Box<dyn Error>> {
-        info!("commencing dump of {} to json", self.root.display());
-        info!("iterating through all languages in {}", self.root.display());
-
-        let mut parsed: Vec<LanguageDump> = vec![];
-        for try_lang in read_dir(&self.root)? {
-            let lang = try_lang?.path();
-            if !lang.is_dir() {
-                continue;
-            }
-
-            let mut language = LanguageDump {
-                language: get_lang_name(&lang)?,
-                blogs: Vec::new(),
-            };
-
-            for entry in read_dir(&lang)? {
-                let blog = entry?.path();
-                let html = parse_blog(&blog)?;
-                let title = prepare_title(&blog)?;
-                language.blogs.push(Blog { title, html });
-            }
-
-            parsed.push(language);
-        }
-
-        let mut file = File::create(&self.output)?;
-        let dump = dump_to_str(&parsed, self.pretty)?;
-        file.write_all(dump.as_bytes())?;
-        info!("dumped file {}", self.output.display());
-        Ok(())
+        info!(
+            "commencing dump of {} into {}",
+            self.root.display(),
+            self.output.display()
+        );
+        self.dump_dir(&self.root)
     }
 
     fn print_success(&self) -> () {
@@ -158,41 +207,44 @@ impl Strategy for Content {
     }
 }
 
-/// A structured representation of the parsed blogs, grouped by language.
-#[derive(serde::Serialize)]
-struct LanguageDump {
-    /// Language used, e.g. Rust, Python, etc.
-    language: String,
-    /// Blogs written in this language.
-    blogs: Vec<Blog>,
-}
-
-/// A structured representation of a blog, containing its title and parsed HTML elements.
-#[derive(serde::Serialize)]
+/// A structured representation of a blog, containing its metadata and parsed HTML elements.
+#[derive(Serialize)]
 struct Blog {
-    /// Title of the blog, derived from the filename.
-    title: String,
+    /// Metadata from the YAML block at the top of the blog.
+    metadata: Metadata,
     /// Parsed HTML elements from the blog's Markdown content.
     html: Vec<HTMLElement>,
 }
 
-/// Parses a blog from Markdown into HTML representation.
+/// Parses the lore file, where each line maps a language to a one-line qwip.
+///
+/// # Arguments
+/// * `path` - The path to the lore file.
+///
+/// # Errors
+/// If the file could not be read or is not a mapping of languages to qwips.
+fn parse_lore(path: &Path) -> Result<BTreeMap<String, String>, Box<dyn Error>> {
+    info!("loading lore qwips from {}", path.display());
+    let qwips: BTreeMap<String, String> = from_str(&read_to_string(path)?)?;
+    info!("parsed {} lore qwips", qwips.len());
+    Ok(qwips)
+}
+
+/// Parses a blog from Markdown into its metadata and HTML representation.
 ///
 /// # Arguments
 /// * `path` - The path to the blog file.
 ///
 /// # Errors
 /// If there was an error reading the file from path.
-///
-/// # Examples
-fn parse_blog(path: &PathBuf) -> Result<Vec<HTMLElement>, Box<dyn Error>> {
+fn parse_blog(path: &Path) -> Result<Blog, Box<dyn Error>> {
     info!("loading metadata and markdown from {}", path.display());
     let (metadata, markdown) = parse_metadata_and_content(path)?;
 
     info!("metadata and markdown loaded, preparing to parse");
-    let json = parse_markdown(&markdown);
+    let html = parse_markdown(&markdown);
     info!("parsed json successfully from {}", path.display());
-    Ok(json)
+    Ok(Blog { metadata, html })
 }
 
 /// Splits a blog file into its YAML metadata and its Markdown content.
@@ -203,14 +255,14 @@ fn parse_blog(path: &PathBuf) -> Result<Vec<HTMLElement>, Box<dyn Error>> {
 ///
 /// # Errors
 /// If the file could not be read, or a `MetadataError` if the metadata is missing or invalid.
-fn parse_metadata_and_content(path: &PathBuf) -> Result<(Metadata, Vec<String>), Box<dyn Error>> {
+fn parse_metadata_and_content(path: &Path) -> Result<(Metadata, Vec<String>), Box<dyn Error>> {
     // this has metadata and then content
     let all_lines = read_to_string(path)?
         .lines()
         .map(|s| s.to_string())
         .collect::<Vec<String>>();
 
-    let metadata_error = || MetadataError::new(path.clone());
+    let metadata_error = || MetadataError::new(path.to_path_buf());
 
     if all_lines.first().map(|line| line.trim()) != Some(METADATA_DELIMITER) {
         return Err(Box::new(metadata_error()));
@@ -229,111 +281,4 @@ fn parse_metadata_and_content(path: &PathBuf) -> Result<(Metadata, Vec<String>),
 
     info!("parsed metadata from {} as {metadata:?}", path.display());
     Ok((metadata, content))
-}
-
-/// Extracts the basename from a path and returns it as a `String`.
-///
-/// # Arguments
-/// * `path` - The path from which to extract the basename.
-///
-/// # Errors
-/// If the basename could not be extracted from the path.
-fn basename(path: &Path) -> Result<String, std::io::Error> {
-    info!("trying to extract basename for {}", path.display());
-    let basename = path
-        .file_name()
-        .ok_or(gen_cannot_extract_basename(path))?
-        .to_str()
-        .ok_or(gen_cannot_extract_basename(path))?
-        .to_string();
-    info!("extracted basename {}", basename.as_str());
-    Ok(basename)
-}
-
-/// Gets the language name from the path by extracting the basename.
-///
-/// # Arguments
-/// * `lang` - The path to the language directory.
-///
-/// # Errors
-/// If the basename could not be extracted from the path.
-fn get_lang_name(lang: &Path) -> Result<String, std::io::Error> {
-    basename(lang)
-}
-
-/// Helper function to generate an error when the basename cannot be extracted.
-///
-/// # Arguments
-/// * `path` - The path from which the basename could not be extracted.
-///
-/// # Examples
-fn gen_cannot_extract_basename(path: &Path) -> std::io::Error {
-    std::io::Error::other(format!(
-        "basename could not be extracted from absolute path {}",
-        path.display()
-    ))
-}
-
-/// Prepares the title for a blog by extracting the basename and formatting it.
-///
-/// # Arguments
-/// * `blog` - The path to the blog file.
-///
-/// # Errors
-/// If there was an error extracting the basename or formatting the title.
-fn prepare_title(blog: &Path) -> Result<String, std::io::Error> {
-    info!("preparing blog title for {}", blog.display());
-    let base = basename(blog)?;
-    let title = base.replace('-', " ").trim_end_matches(".md").to_string();
-    info!("prepared title {}", title.as_str());
-    Ok(title)
-}
-
-#[cfg(test)]
-mod tests {
-    use std::path::PathBuf;
-
-    use super::*;
-
-    #[test]
-    fn test_doctest() {}
-
-    #[test]
-    fn test_basename_good() {
-        let mut path = PathBuf::new();
-        path.push("root");
-        path.push("parent");
-        path.push("child.md");
-        match basename(&path) {
-            Err(_) => assert!(false),
-            Ok(base) => assert_eq!(base, "child.md"),
-        };
-    }
-
-    #[test]
-    fn test_lang_name_good() {
-        let mut path = PathBuf::new();
-        path.push("root");
-        path.push("parent");
-        match get_lang_name(&path) {
-            Err(_) => assert!(false),
-            Ok(lang) => assert_eq!(lang, "parent"),
-        };
-    }
-
-    #[test]
-    fn test_cannot_extract_basename() {
-        let path = PathBuf::from("my-blog-post.md");
-        let error = gen_cannot_extract_basename(&path);
-        assert!(error
-            .to_string()
-            .contains("basename could not be extracted from absolute path my-blog-post.md"));
-    }
-
-    #[test]
-    fn test_prepare_title() {
-        let blog = PathBuf::from("my-blog-post.md");
-        let title = prepare_title(&blog).expect("Failed to prepare title");
-        assert_eq!(title, "my blog post");
-    }
 }

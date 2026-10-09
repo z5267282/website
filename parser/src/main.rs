@@ -1,5 +1,5 @@
 use clap::Parser;
-use parser::strategy::content::paths::{JSON, MARKDOWN};
+use parser::strategy::content::paths::{OUTPUT_DIR, ROOT};
 use parser::strategy::content::Content;
 use parser::strategy::standalone::Standalone;
 use parser::strategy::Strategy;
@@ -12,7 +12,11 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let strategy: Box<dyn Strategy> = match (args.src, args.dst) {
         (Some(src), Some(dst)) => Box::new(Standalone::new(src, dst, args.pretty)),
-        (None, None) => Box::new(Content::new(PathBuf::from(MARKDOWN), PathBuf::from(JSON), args.pretty)),
+        (None, None) => Box::new(Content::new(
+            PathBuf::from(ROOT),
+            PathBuf::from(OUTPUT_DIR),
+            args.pretty,
+        )),
         _ => unreachable!("clap enforces that src and dst are given together"),
     };
     strategy.run()?;

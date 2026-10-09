@@ -3,11 +3,30 @@
 This crate parses Markdown text into structured JSON. The full json schema is
 written [here](./json_schema.md).
 
-This command will create the file `../website/public/blogs.json`.
+This command parses the whole `../content/` folder into `../frontend/src/content/`.
 
 ```sh
 cargo run
 ```
+
+## Content Structure
+
+By default the parser is built around the fixed layout of the `content/`
+folder, so it relies on that layout being followed.
+
+```txt
+content/
+    blog/
+        + interesting-topic.md
+    lore/
+        :lang/
+            + langauge-semantic topic.md
+        + lore.yaml
+```
+
+The output is generated, so it should not be committed. It lives in `src/`
+rather than `public/` so that Vite bundles it into the pages that
+`vite-react-ssg` pre-renders.
 
 ## Flags
 
