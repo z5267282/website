@@ -8,16 +8,16 @@ import parseOneLine from "../parser";
  */
 export default function ParsedMarkdown({ title, html, elementKey }) {
   return (
-    <div className="min-y-screen">
-      <header className="text-[1.5em] flex justify-center items-center h-[calc(1.5em_+20px)] w-full pt-[20px]">
+    <>
+      <header className="text-[1.5em] flex justify-center items-center">
         {title}
       </header>
-      <div className="w-full h-auto ml-0 mr-0 pl-[5%] pr-[5%] md:pl-[10vw] md:pr-[10vw] pb-10 overflow-x-auto">
+      <article className="overflow-x-auto">
         {html.map((htmlData, index) =>
           genHTML(htmlData, genElementKey(elementKey, index)),
         )}
-      </div>
-    </div>
+      </article>
+    </>
   );
 }
 
