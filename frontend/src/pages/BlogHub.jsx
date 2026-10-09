@@ -1,27 +1,17 @@
-import { getLanguages } from "../unpack";
-import Header1 from "../components/Header1";
-import AlignedLink from "../components/AlignedLink";
-import AlignedLinkedList from "../components/AlignedLinksList";
+import { getBlogs } from "../content";
+import MarkdownHub from "../components/MarkdownHub";
 
 export default function BlogHub() {
-  const languages = Array.from(getLanguages());
-  languages.sort();
-
   return (
     <>
       <title>sunny | blogs</title>
-      <Header1 content="Language-Semantic Blogs" />
-
-      <AlignedLinkedList>
-        {languages.map((language) => (
-          <AlignedLink
-            key={language}
-            to={`/blogs/${language}`}
-            linkText={`${language}`}
-            desc="TODO"
-          />
-        ))}
-      </AlignedLinkedList>
+      <MarkdownHub
+        heading="Blogs"
+        links={getBlogs().map(({ slug, metadata }) => ({
+          to: `/blogs/${slug}`,
+          title: metadata.title,
+        }))}
+      />
     </>
   );
 }

@@ -1,12 +1,13 @@
-import { getLanguages, getBlogTitlesForLanguage } from "./unpack";
-import { blogToURL } from "./blogToURL";
+import { getBlogs, getLoreLanguages, getLoreEntries } from "./content";
 import Layout from "./Layout";
 
 import AboutMe from "./pages/AboutMe";
 import ProjectHub from "./pages/ProjectHub";
 import BlogHub from "./pages/BlogHub";
-import LanguageHub from "./pages/LanguageHub";
 import Blog from "./pages/Blog";
+import LoreHub from "./pages/LoreHub";
+import LanguageHub from "./pages/LanguageHub";
+import Lore from "./pages/Lore";
 import NotFound from "./pages/NotFound";
 
 export const routes = [
@@ -22,19 +23,22 @@ export const routes = [
       },
       { path: "blogs", Component: BlogHub },
       {
-        path: "blogs/:lang",
+        path: "blogs/:slug",
+        Component: Blog,
+        getStaticPaths: () => getBlogs().map(({ slug }) => `blogs/${slug}`),
+      },
+      { path: "lore", Component: LoreHub },
+      {
+        path: "lore/:lang",
         Component: LanguageHub,
-        getStaticPaths: () =>
-          Array.from(getLanguages()).map((lang) => `blogs/${lang}`),
+        getStaticPaths: () => getLoreLanguages().map((lang) => `lore/${lang}`),
       },
       {
-        path: "blogs/:lang/:title",
-        Component: Blog,
+        path: "lore/:lang/:slug",
+        Component: Lore,
         getStaticPaths: () =>
-          Array.from(getLanguages()).flatMap((lang) =>
-            Array.from(getBlogTitlesForLanguage(lang)).map(
-              (title) => `blogs/${lang}/${blogToURL(title)}`,
-            ),
+          getLoreLanguages().flatMap((lang) =>
+            getLoreEntries(lang).map(({ slug }) => `lore/${lang}/${slug}`),
           ),
       },
       { path: "*", Component: NotFound },
