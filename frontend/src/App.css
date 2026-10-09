@@ -2,6 +2,7 @@
 
 :root {
   --nav-height: 35px;
+  --page-header-padding: 30px;
   --nav-colour: #e2edff;
   --tab-selected-colour: #afcdff;
   --site-background-colour: rgb(242, 242, 242);

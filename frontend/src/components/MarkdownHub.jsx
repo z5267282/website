@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import Header1 from "./Header1";
+import Page from "./Page";
 
 /**
  * A hub of links to pieces of parsed Markdown, laid out as a single column of cards.
@@ -9,10 +9,9 @@ import Header1 from "./Header1";
  */
 export default function MarkdownHub({ heading, links }) {
   return (
-    <>
-      <Header1 content={heading} />
+    <Page title={heading}>
       {/* sizes to the widest card, capped at the parent's width */}
-      <ul className="flex max-w-full mt-[20px] pb-10 flex-col gap-y-[30px]">
+      <ul className="flex max-w-full pb-10 flex-col gap-y-[30px]">
         {links.map(({ to, title, date, description }) => (
           <li key={to}>
             <Link
@@ -30,6 +29,6 @@ export default function MarkdownHub({ heading, links }) {
           </li>
         ))}
       </ul>
-    </>
+    </Page>
   );
 }

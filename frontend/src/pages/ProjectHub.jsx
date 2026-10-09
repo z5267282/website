@@ -1,6 +1,6 @@
 import { Head } from "vite-react-ssg";
 
-import Header1 from "../components/Header1";
+import Page from "../components/Page";
 
 import ProjectPreviewCard from "../cards/ProjectPreviewCard";
 
@@ -10,12 +10,13 @@ export default function ProjectHub() {
       <Head>
         <title>sunny | projects</title>
       </Head>
-      <Header1 content="My Projects" />
-      <div className="flex mt-[20px] flex-col items-center gap-y-[30px]">
-        <BlogMarkdownParserPreview />
-        <MvePreview />
-        <FocusTrackerPreview />
-      </div>
+      <Page title="My Projects">
+        <div className="flex flex-col items-center gap-y-[30px]">
+          <BlogMarkdownParserPreview />
+          <MvePreview />
+          <FocusTrackerPreview />
+        </div>
+      </Page>
     </>
   );
 }

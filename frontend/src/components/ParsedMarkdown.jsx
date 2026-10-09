@@ -1,6 +1,7 @@
 import { Head } from "vite-react-ssg";
 
 import parseOneLine from "../parser";
+import Page from "./Page";
 import Header1 from "./Header1";
 import Header2 from "./Header2";
 import Header3 from "./Header3";
@@ -19,14 +20,13 @@ export default function ParsedMarkdown({ metadata, html, elementKey }) {
         <title>{`sunny | ${title}`}</title>
         <meta name="description" content={description} />
       </Head>
-      <header className="text-[1.5em] flex justify-center items-center">
-        {title}
-      </header>
-      <article className="w-full grid grid-cols-1 gap-y-[15px]">
-        {html.map((htmlData, index) =>
-          genHTML(htmlData, genElementKey(elementKey, index)),
-        )}
-      </article>
+      <Page title={title}>
+        <article className="w-full grid grid-cols-1 gap-y-[15px]">
+          {html.map((htmlData, index) =>
+            genHTML(htmlData, genElementKey(elementKey, index)),
+          )}
+        </article>
+      </Page>
     </>
   );
 }
