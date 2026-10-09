@@ -117,7 +117,7 @@ function Table({ headers, rows, elementKey }) {
           <tr>
             {headers.map((header, index) => (
               <th
-                className="bg-[#e2edff] p-1"
+                className="bg-(--nav-colour) p-1"
                 scope="col"
                 key={`${elementKey}-header-${index}`}
               >
