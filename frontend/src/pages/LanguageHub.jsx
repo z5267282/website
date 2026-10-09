@@ -14,6 +14,8 @@ export default function LanguageHub() {
         links={getLoreEntries(lang).map(({ slug, metadata }) => ({
           to: `/lore/${lang}/${slug}`,
           title: metadata.title,
+          date: metadata.date,
+          description: metadata.description,
         }))}
       />
     </>

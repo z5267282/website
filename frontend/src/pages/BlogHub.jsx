@@ -10,6 +10,8 @@ export default function BlogHub() {
         links={getBlogs().map(({ slug, metadata }) => ({
           to: `/blogs/${slug}`,
           title: metadata.title,
+          date: metadata.date,
+          description: metadata.description,
         }))}
       />
     </>
