@@ -1,10 +1,14 @@
+import { Head } from "vite-react-ssg";
+
 import { getBlogs } from "../content";
 import MarkdownHub from "../components/MarkdownHub";
 
 export default function BlogHub() {
   return (
     <>
-      <title>sunny | blogs</title>
+      <Head>
+        <title>sunny | blogs</title>
+      </Head>
       <MarkdownHub
         heading="Blogs"
         links={getBlogs().map(({ slug, metadata }) => ({

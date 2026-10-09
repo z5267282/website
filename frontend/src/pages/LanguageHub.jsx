@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+import { Head } from "vite-react-ssg";
 
 import { getLoreEntries } from "../content";
 import MarkdownHub from "../components/MarkdownHub";
@@ -8,7 +9,9 @@ export default function LanguageHub() {
 
   return (
     <>
-      <title>{`sunny | lore | ${lang}`}</title>
+      <Head>
+        <title>{`sunny | lore | ${lang}`}</title>
+      </Head>
       <MarkdownHub
         heading={`Language-Semantics for ${lang}`}
         links={getLoreEntries(lang).map(({ slug, metadata }) => ({

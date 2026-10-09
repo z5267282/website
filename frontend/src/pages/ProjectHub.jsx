@@ -1,3 +1,5 @@
+import { Head } from "vite-react-ssg";
+
 import Header1 from "../components/Header1";
 
 import ProjectPreviewCard from "../cards/ProjectPreviewCard";
@@ -5,7 +7,9 @@ import ProjectPreviewCard from "../cards/ProjectPreviewCard";
 export default function ProjectHub() {
   return (
     <>
-      <title>sunny | projects</title>
+      <Head>
+        <title>sunny | projects</title>
+      </Head>
       <Header1 content="My Projects" />
       <div className="flex mt-[20px] flex-col items-center gap-y-[30px]">
         <BlogMarkdownParserPreview />

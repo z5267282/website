@@ -1,14 +1,21 @@
+import { Head } from "vite-react-ssg";
+
 import parseOneLine from "../parser";
 
 /**
- * Render a piece of parsed Markdown.
- * @prop: title: string - displayed as the header.
+ * Render a piece of parsed Markdown along with its page metadata.
+ * @prop: metadata: Object - the markdown's metadata; title is used for the page title and header, description for the meta description.
  * @prop: html: Object[] - the structured JSON HTML data which follows the parser JSON schema.
  * @prop: elementKey: string - the base of every element's key for React-rendering management.
  */
-export default function ParsedMarkdown({ title, html, elementKey }) {
+export default function ParsedMarkdown({ metadata, html, elementKey }) {
+  const { title, description } = metadata;
   return (
     <>
+      <Head>
+        <title>{`sunny | ${title}`}</title>
+        <meta name="description" content={description} />
+      </Head>
       <header className="text-[1.5em] flex justify-center items-center">
         {title}
       </header>

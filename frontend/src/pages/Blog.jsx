@@ -12,13 +12,10 @@ export default function Blog() {
   }
 
   return (
-    <>
-      <title>{`sunny | ${blog.metadata.title}`}</title>
-      <ParsedMarkdown
-        title={blog.metadata.title}
-        html={blog.html}
-        elementKey={slug}
-      />
-    </>
+    <ParsedMarkdown
+      metadata={blog.metadata}
+      html={blog.html}
+      elementKey={slug}
+    />
   );
 }

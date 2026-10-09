@@ -12,13 +12,10 @@ export default function Lore() {
   }
 
   return (
-    <>
-      <title>{`sunny | ${entry.metadata.title}`}</title>
-      <ParsedMarkdown
-        title={entry.metadata.title}
-        html={entry.html}
-        elementKey={`${lang}-${slug}`}
-      />
-    </>
+    <ParsedMarkdown
+      metadata={entry.metadata}
+      html={entry.html}
+      elementKey={`${lang}-${slug}`}
+    />
   );
 }

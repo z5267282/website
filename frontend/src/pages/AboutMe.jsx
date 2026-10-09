@@ -1,3 +1,5 @@
+import { Head } from "vite-react-ssg";
+
 import Header1 from "../components/Header1";
 import Header2 from "../components/Header2";
 import LogoButton from "../components/LogoButton";
@@ -7,7 +9,9 @@ import AlignedLinkedList from "../components/AlignedLinksList";
 export default function AboutMe() {
   return (
     <>
-      <title>sunny | home</title>
+      <Head>
+        <title>sunny | home</title>
+      </Head>
       <Header1 content="About Me" />
       {/* prettier-ignore */}
       <div className="leading-loose whitespace-pre-line">
