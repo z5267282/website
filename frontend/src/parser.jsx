@@ -40,6 +40,32 @@ export default function parseOneLine(lineContents, elementKey = null) {
 }
 
 /**
+ * Parse one line of a paragraph into its own element.
+ * A line starting with a > is a quote and is rendered as an italic, grey <div>.
+ * Otherwise the line is rendered as a regular <p>.
+ * Either way, the line's contents can contain nested inline elements.
+ * @param {String} lineContents Of the current line.
+ * @param {String | null} elementKey The key for React-rendering management. Can be null for testing where the key doesn't matter.
+ * @returns A JSX element wrapping the parsed contents of the line.
+ */
+export function parseParagraphLine(lineContents, elementKey = null) {
+  const quote = lineContents.match(/^>\s?(.*)$/);
+  if (quote !== null) {
+    return (
+      <div className="wrap-break-word italic text-gray-500" key={elementKey}>
+        {parseOneLine(quote[1], elementKey)}
+      </div>
+    );
+  }
+
+  return (
+    <p className="wrap-break-word" key={elementKey}>
+      {parseOneLine(lineContents, elementKey)}
+    </p>
+  );
+}
+
+/**
  * Find the left most feature of a line.
  * @param {String} currSubLine The current line we are looking at.
  * @param {String | null} elementKey The key from the parent for React-rendering management. Can be null for testing where the key doesn't matter.

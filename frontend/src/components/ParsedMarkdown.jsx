@@ -1,6 +1,6 @@
 import { Head } from "vite-react-ssg";
 
-import parseOneLine from "../parser";
+import parseOneLine, { parseParagraphLine } from "../parser";
 import Page from "./Page";
 import Header1 from "./Header1";
 import Header2 from "./Header2";
@@ -151,11 +151,9 @@ function Table({ headers, rows, elementKey }) {
 function Paragraph({ lines, elementKey }) {
   return (
     <div>
-      {lines.map((line, index) => (
-        <p className="wrap-break-word" key={`${elementKey}-line-${index}`}>
-          {parseOneLine(line, elementKey)}
-        </p>
-      ))}
+      {lines.map((line, index) =>
+        parseParagraphLine(line, `${elementKey}-line-${index}`),
+      )}
     </div>
   );
 }

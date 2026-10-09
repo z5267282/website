@@ -142,12 +142,12 @@ frontend as they only involve simple single-line string manipulations.
 - Links
 - Bold Text, where asterisks are used `** bold text **`
 - Inline Code Bacticks
+- Quotes, where a line starts with `>`
 
 ### Unsupported - ❌
 
 - Italic Text
 - Strikethrough
-- Blockquotes
 - Horizontal Rules
 - Images
 - HTML

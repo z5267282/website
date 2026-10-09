@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 
-import parseOneLine from "../parser";
+import parseOneLine, { parseParagraphLine } from "../parser";
 
 test("parser works with plain text", () => {
   expect(parseOneLine("The big car.")).toStrictEqual(["The big car."]);
@@ -110,4 +110,23 @@ test("parser removes asterisks for bold text", () => {
   expect(text).toBe(
     "the asterisk looks like * - press SHIFT + 8 on the keyboard to find it"
   );
+});
+
+test("paragraph line starting with > is rendered as a quote", async () => {
+  const { getByText } = render(
+    parseParagraphLine("> The big **car** drove off.")
+  );
+  const quote = getByText("The big", { exact: false });
+  await expect.element(quote).toBeInTheDocument();
+  await expect.element(quote).toHaveClass("italic", "text-gray-500");
+  await expect.element(quote).toHaveTextContent("The big car drove off.");
+  expect(quote.element().tagName).toBe("DIV");
+});
+
+test("paragraph line without > is rendered as a regular paragraph", async () => {
+  const { getByText } = render(parseParagraphLine("The big car."));
+  const line = getByText("The big car.");
+  await expect.element(line).toBeInTheDocument();
+  await expect.element(line).not.toHaveClass("italic");
+  expect(line.element().tagName).toBe("P");
 });
