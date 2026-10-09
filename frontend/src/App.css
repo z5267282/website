@@ -21,6 +21,12 @@ html {
   src: url("../fonts/pt-serif-v19-latin-regular.woff2") format("woff2");
 }
 
+@layer base {
+  body {
+    font-size: 13pt;
+  }
+}
+
 @theme {
   --default-font-family: "PT Serif", serif;
 }
