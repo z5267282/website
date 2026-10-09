@@ -3,6 +3,8 @@
 //! The binary parses blogs written in ../blog.
 //! To library can be used via the `parse.to_html.parse_markdown` function.
 
+pub mod blog;
+
 pub mod dump;
 
 pub mod error;
