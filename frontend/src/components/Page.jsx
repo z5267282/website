@@ -20,7 +20,7 @@ export default function Page({
       <header className="w-full text-center">
         <Header1 content={title} className="py-(--page-header-padding)" />
         {(description || date) && (
-          <div className="w-full flex justify-between items-baseline gap-x-[15px] text-left pb-(--page-header-padding)">
+          <div className="w-full flex justify-between items-baseline gap-x-[15px] text-left pb-[calc(2*var(--page-header-padding))]">
             {description && <p className="italic">{description}</p>}
             {date && (
               <time className="ml-auto shrink-0" dateTime={date}>
