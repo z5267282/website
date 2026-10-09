@@ -6,7 +6,7 @@ use std::{error::Error, path::PathBuf};
 
 use super::Strategy;
 
-use crate::parse::blog::parse_blog;
+use crate::parse::markdown::parse_markdown_file;
 use crate::parse::dump::dump_to_str;
 
 /// Parses one Markdown src file and writes the result to a dst JSON path.
@@ -26,7 +26,7 @@ impl Standalone {
 }
 
 impl Strategy for Standalone {
-    /// Parses the source Markdown blog into its metadata and HTML, and writes it as JSON to the
+    /// Parses the source Markdown file into its metadata and HTML, and writes it as JSON to the
     /// destination file.
     ///
     /// # Errors
@@ -52,14 +52,14 @@ impl Strategy for Standalone {
     /// "#;
     ///
     /// let dir = tempdir().expect("could not create temporary directory");
-    /// let src = dir.path().join("example-blog.md");
-    /// let dst = dir.path().join("example-blog.json");
-    /// write(&src, contents).expect("could not write blog");
+    /// let src = dir.path().join("example.md");
+    /// let dst = dir.path().join("example.json");
+    /// write(&src, contents).expect("could not write markdown");
     ///
     /// let worker = Standalone::new(src, dst.clone(), false);
     /// worker.run().expect("failed to dump standalone file");
     ///
-    /// let dumped = read_to_string(&dst).expect("could not read dumped blog");
+    /// let dumped = read_to_string(&dst).expect("could not read dumped markdown");
     /// assert!(dumped.contains("Sample Markdown"));
     /// assert!(dumped.contains("This is a sample Markdown file."));
     /// assert!(dumped.contains("No further content."));
@@ -70,8 +70,8 @@ impl Strategy for Standalone {
             self.src.display(),
             self.dst.display()
         );
-        let blog = parse_blog(&self.src)?;
-        write(&self.dst, dump_to_str(&blog, self.pretty)?)?;
+        let markdown = parse_markdown_file(&self.src)?;
+        write(&self.dst, dump_to_str(&markdown, self.pretty)?)?;
         info!("dumped {} to {}", self.src.display(), self.dst.display());
         Ok(())
     }

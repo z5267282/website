@@ -22,7 +22,7 @@ use serde_saphyr::from_str;
 
 use super::Strategy;
 
-use crate::parse::blog::parse_blog;
+use crate::parse::markdown::parse_markdown_file;
 use crate::parse::dump::dump_to_str;
 
 /// Paths for dump files where `parser/`` is considered as current folder
@@ -83,7 +83,7 @@ impl Content {
                 .extension()
                 .is_some_and(|ext| ext == MARKDOWN_EXTENSION)
             {
-                self.dump_file(&path, &parse_blog(&path)?)?;
+                self.dump_file(&path, &parse_markdown_file(&path)?)?;
             } else {
                 warn!("skipping unrecognised file {}", path.display());
             }
@@ -120,7 +120,7 @@ impl Content {
 
 impl Strategy for Content {
     /// Parses every file in the content folder into a JSON file at the same relative path in the
-    /// output folder. Markdown blogs are parsed into their metadata and HTML, and the lore file is
+    /// output folder. Markdown files are parsed into their metadata and HTML, and the lore file is
     /// parsed into an object mapping each language to its qwip.
     ///
     /// # Errors
@@ -177,8 +177,8 @@ impl Strategy for Content {
     /// let worker = Content::new(PathBuf::from(content.path()), PathBuf::from(output.path()), false);
     /// worker.run().expect("failed to dump content");
     ///
-    /// for blog in ["blog/example-blog.json", "lore/shell/example-lore.json"] {
-    ///     let dumped = read_to_string(output.path().join(blog)).expect("could not read dumped blog");
+    /// for path in ["blog/example-blog.json", "lore/shell/example-lore.json"] {
+    ///     let dumped = read_to_string(output.path().join(path)).expect("could not read dumped markdown");
     ///     assert!(dumped.contains("Sample Markdown"));
     ///     assert!(dumped.contains("This is a sample Markdown file."));
     ///     assert!(dumped.contains("No further content."));

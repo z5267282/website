@@ -346,7 +346,7 @@ mod tests {
 
     #[test]
     fn test_header_paragraph_code() {
-        let blog = vec![
+        let markdown = vec![
             "# Overview".to_string(),
             "".to_string(),
             "The `upper_bound` and `lower_bound` functions give iterators to the first element matching a condition.  ".to_string(),
@@ -418,12 +418,12 @@ mod tests {
             "}".to_string(),
         ] };
 
-        assert_eq!(parse_markdown(&blog), vec![header, para1, para2, code]);
+        assert_eq!(parse_markdown(&markdown), vec![header, para1, para2, code]);
     }
 
     #[test]
     fn test_complex_composition() {
-        let blog = vec![
+        let markdown = vec![
             "# Notes".to_string(),
             "".to_string(),
             "1. Enter `tmux` to start".to_string(),
@@ -463,7 +463,7 @@ mod tests {
             "".to_string(),
         ];
 
-        assert_eq!(parse_markdown(&blog), vec![
+        assert_eq!(parse_markdown(&markdown), vec![
             HTMLElement::Header { level: 1, content: "Notes".to_string() },
             HTMLElement::OrderedList { list: vec![
                 "Enter `tmux` to start".to_string(),

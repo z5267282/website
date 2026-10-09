@@ -25,7 +25,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-/// Command line arguments for the blog parser.
+/// Command line arguments for the Markdown parser.
 ///
 /// With no paths, the whole `content` folder is parsed.
 /// With both `SRC` and `DST`, a single markdown file is parsed instead.

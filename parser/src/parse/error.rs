@@ -2,7 +2,7 @@ use std::error::Error;
 use std::fmt::Display;
 use std::path::PathBuf;
 
-/// An error raised when a blog's metadata is missing or could not be parsed.
+/// An error raised when a Markdown file's metadata is missing or could not be parsed.
 #[derive(Debug)]
 pub struct MetadataError {
     /// Path of the file whose metadata could not be parsed.
