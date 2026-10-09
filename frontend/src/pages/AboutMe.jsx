@@ -12,7 +12,7 @@ export default function AboutMe() {
       <Head>
         <title>sunny | home</title>
       </Head>
-      <Page title="About Me">
+      <Page title="About Me" spread>
         {/* prettier-ignore */}
         <div className="leading-loose whitespace-pre-line">
 {`Hi I'm Sunny.

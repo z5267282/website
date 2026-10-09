@@ -59,7 +59,7 @@ export default function MarkdownHub({ heading, subheading, links }) {
       {/* contain:size stops the cards' gaps from stretching the page, so the hub fills the leftover space instead;
           it can then only grow the page as far as its min-height, which fits the cards with no gaps */}
       <div
-        className="w-[90%] flex-1 [contain:size] flex flex-col justify-center"
+        className="w-[90%] flex-1 [contain:size] flex flex-col justify-start"
         style={{
           minHeight: `calc(${rows} * ${CARD_HEIGHT}${subheading ? " + 1lh + var(--page-header-padding)" : ""} + ${SEARCH_BAR_HEIGHT} + 15px${hasNav ? " + 1lh + 15px" : ""})`,
         }}

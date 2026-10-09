@@ -15,7 +15,7 @@ export default function LanguageHub() {
       </Head>
       <MarkdownHub
         key={lang}
-        heading={`Language-Semantics for ${lang}`}
+        heading={`Language Semantics for ${lang}`}
         subheading={`${entries.length} ${entries.length === 1 ? "entry" : "entries"} for ${lang}`}
         links={entries.map(({ slug, metadata }) => ({
           to: `/lore/${lang}/${slug}`,

@@ -11,7 +11,7 @@ export default function LoreHub() {
       <Head>
         <title>sunny | lore</title>
       </Head>
-      <Page title="Language-Semantic Lore">
+      <Page title="Language-Semantic Lore" spread>
         <AlignedLinkList>
           {getLoreLanguages().map((language) => (
             <AlignedLink

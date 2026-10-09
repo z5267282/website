@@ -10,7 +10,7 @@ export default function ProjectHub() {
       <Head>
         <title>sunny | projects</title>
       </Head>
-      <Page title="My Projects">
+      <Page title="My Projects" spread>
         <div className="flex flex-col items-center gap-y-[30px]">
           <BlogMarkdownParserPreview />
           <MvePreview />
