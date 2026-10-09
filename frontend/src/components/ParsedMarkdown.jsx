@@ -8,19 +8,19 @@ import Header3 from "./Header3";
 
 /**
  * Render a piece of parsed Markdown along with its page metadata.
- * @prop: metadata: Object - the markdown's metadata; title is used for the page title and header, description for the meta description.
+ * @prop: metadata: Object - the markdown's metadata; title is used for the page title and header, description for the meta description and header, date for the header.
  * @prop: html: Object[] - the structured JSON HTML data which follows the parser JSON schema.
  * @prop: elementKey: string - the base of every element's key for React-rendering management.
  */
 export default function ParsedMarkdown({ metadata, html, elementKey }) {
-  const { title, description } = metadata;
+  const { title, description, date } = metadata;
   return (
     <>
       <Head>
         <title>{`sunny | ${title}`}</title>
         <meta name="description" content={description} />
       </Head>
-      <Page title={title}>
+      <Page title={title} description={description} date={date}>
         <article className="w-full grid grid-cols-1 gap-y-[15px]">
           {html.map((htmlData, index) =>
             genHTML(htmlData, genElementKey(elementKey, index)),
