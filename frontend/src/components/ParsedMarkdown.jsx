@@ -19,7 +19,7 @@ export default function ParsedMarkdown({ metadata, html, elementKey }) {
       <header className="text-[1.5em] flex justify-center items-center">
         {title}
       </header>
-      <article className="overflow-x-auto">
+      <article>
         {html.map((htmlData, index) =>
           genHTML(htmlData, genElementKey(elementKey, index)),
         )}
@@ -90,13 +90,12 @@ const genHTML = (htmlData, elementKey) => {
     case "Code": {
       const { code } = htmlData;
       return (
-        // this div is needed to ensure code blocks appear on their own lines even if there is room for both to appear on the same one
-        <div key={`${elementKey}-code_block`}>
-          {/* inline-block allows the <pre> to grow as big as the <code> */}
-          <pre className="inline-block border-[2px] my-2 border-black p-2 overflow-x-auto">
-            <code className="w-max">{code.join("\n")}</code>
-          </pre>
-        </div>
+        <pre
+          key={`${elementKey}-code_block`}
+          className="border-[1.25px] border-black p-[10px] overflow-x-scroll"
+        >
+          <code className="block">{code.join("\n")}</code>
+        </pre>
       );
     }
     case "OrderedList": {
