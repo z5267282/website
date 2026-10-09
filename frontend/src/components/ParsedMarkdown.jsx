@@ -1,6 +1,9 @@
 import { Head } from "vite-react-ssg";
 
 import parseOneLine from "../parser";
+import Header1 from "./Header1";
+import Header2 from "./Header2";
+import Header3 from "./Header3";
 
 /**
  * Render a piece of parsed Markdown along with its page metadata.
@@ -19,7 +22,7 @@ export default function ParsedMarkdown({ metadata, html, elementKey }) {
       <header className="text-[1.5em] flex justify-center items-center">
         {title}
       </header>
-      <article className="w-full">
+      <article className="w-full grid grid-cols-1 gap-y-[15px]">
         {html.map((htmlData, index) =>
           genHTML(htmlData, genElementKey(elementKey, index)),
         )}
@@ -39,159 +42,149 @@ const genElementKey = (baseKey, index) => {
 };
 
 /**
- * Create all the JSX Element from given HTML data as JSON.
- * @param {Object} htmlData The structured JSON HTML data which follows the parser JSON schema.
- * @param {String} elementKey The key from the parent for React-rendering management.
- * @returns The JSX element constructed from the formatted HTML data.
+ * Create a header component for the lower header levels, which all share the same styling.
+ * @param {Number} level The header level, from 4 to 6.
+ * @returns A component rendering an <h{level}> with the given content.
  */
-const genHTML = (htmlData, elementKey) => {
-  switch (htmlData.type) {
-    case "Header": {
-      const { level, content } = htmlData;
-      switch (level) {
-        case 1:
-          return (
-            <h1 className="text-[1.5em] my-[0.25em]" key={`${elementKey}-h1`}>
-              {content}
-            </h1>
-          );
-        case 2:
-          return (
-            <h2 className="text-[1.25em] my-[0.2em]" key={`${elementKey}-h2`}>
-              {content}
-            </h2>
-          );
-        case 3:
-          return (
-            <h3 className="text-[1.1em]" key={`${elementKey}-h3`}>
-              {content}
-            </h3>
-          );
-        case 4:
-          return (
-            <h4 className="text-[1em]" key={`${elementKey}-h4`}>
-              {content}
-            </h4>
-          );
-        case 5:
-          return (
-            <h5 className="text-[1em]" key={`${elementKey}-h5`}>
-              {content}
-            </h5>
-          );
-        default:
-          return (
-            <h6 className="text-[1em]" key={`${elementKey}-h6`}>
-              {content}
-            </h6>
-          );
-      }
-    }
-    case "Code": {
-      const { code } = htmlData;
-      return (
-        <pre
-          key={`${elementKey}-code_block`}
-          className="border-[1.25px] border-black p-[10px] overflow-x-auto"
+const makeLowerHeader = (level) => {
+  const Tag = `h${level}`;
+  const LowerHeader = ({ content }) => (
+    <Tag className="text-[1em]">{content}</Tag>
+  );
+  LowerHeader.displayName = `Header${level}`;
+  return LowerHeader;
+};
+
+const [Header4, Header5, Header6] = [4, 5, 6].map(makeLowerHeader);
+
+const HEADERS_BY_LEVEL = {
+  1: Header1,
+  2: Header2,
+  3: Header3,
+  4: Header4,
+  5: Header5,
+  6: Header6,
+};
+
+function Header({ level, content }) {
+  const HeaderLevel = HEADERS_BY_LEVEL[level] ?? Header6;
+  return <HeaderLevel content={content} />;
+}
+
+function Code({ code }) {
+  return (
+    <pre className="border-[1.25px] border-black p-[10px] overflow-x-auto">
+      <code className="block">{code.join("\n")}</code>
+    </pre>
+  );
+}
+
+function OrderedList({ list, elementKey }) {
+  return (
+    <ol>
+      {list.map((li, index) => (
+        <li
+          className="list-inside list-decimal"
+          key={`${elementKey}-item-${index}`}
         >
-          <code className="block">{code.join("\n")}</code>
-        </pre>
-      );
-    }
-    case "OrderedList": {
-      const { list } = htmlData;
-      const subKey = `${elementKey}-unordered_list`;
-      return (
-        <ol key={subKey}>
-          {list.map((li, index) => (
-            <li
-              className="list-inside list-decimal"
-              key={`${subKey}-item-${index}`}
-            >
-              {parseOneLine(li, subKey)}
-            </li>
-          ))}
-        </ol>
-      );
-    }
-    case "UnorderedList": {
-      const { list } = htmlData;
-      const subKey = `${elementKey}-ordered_list`;
-      return (
-        <ul key={subKey}>
-          {list.map((li, index) => (
-            <li
-              className="list-inside list-disc"
-              key={`${subKey}-item-${index}`}
-            >
-              {parseOneLine(li, subKey)}
-            </li>
-          ))}
-        </ul>
-      );
-    }
-    case "Table": {
-      const { headers, rows } = htmlData;
-      const subKey = `${elementKey}-table`;
-      return (
-        <div
-          className="h-full w-full flex justify-center items-center md:justify-start p-2 overflow-x-auto"
-          key={subKey}
+          {parseOneLine(li, elementKey)}
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function UnorderedList({ list, elementKey }) {
+  return (
+    <ul>
+      {list.map((li, index) => (
+        <li
+          className="list-inside list-disc"
+          key={`${elementKey}-item-${index}`}
         >
-          <table className="border-[2px] border-black">
-            <thead>
-              <tr>
-                {headers.map((header, index) => {
-                  const headerKey = `${subKey}-header-${index}`;
+          {parseOneLine(li, elementKey)}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function Table({ headers, rows, elementKey }) {
+  return (
+    <div className="h-full w-full flex justify-center items-center md:justify-start p-2 overflow-x-auto">
+      <table className="border-[2px] border-black">
+        <thead>
+          <tr>
+            {headers.map((header, index) => (
+              <th
+                className="bg-[#e2edff] p-1"
+                scope="col"
+                key={`${elementKey}-header-${index}`}
+              >
+                {parseOneLine(header, elementKey)}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, r) => {
+            const rowKey = `${elementKey}-row-${r}`;
+            return (
+              <tr key={rowKey}>
+                {row.map((col, c) => {
+                  const colKey = `${rowKey}-col-${c}`;
                   return (
-                    <th
-                      className="bg-[#e2edff] p-1"
-                      scope="col"
-                      key={headerKey}
-                    >
-                      {parseOneLine(header, subKey)}
-                    </th>
+                    <td className="p-1" key={colKey}>
+                      {parseOneLine(col, colKey)}
+                    </td>
                   );
                 })}
               </tr>
-            </thead>
-            <tbody>
-              {rows.map((row, r) => {
-                const rowKey = `${subKey}-row-${r}`;
-                return (
-                  <tr key={rowKey}>
-                    {row.map((col, c) => {
-                      const colKey = `${rowKey}-col-${c}`;
-                      return (
-                        <td className="p-1" key={colKey}>
-                          {parseOneLine(col, colKey)}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      );
-    }
-    case "Paragraph": {
-      const { lines } = htmlData;
-      const subKey = `${elementKey}-paragraph`;
-      return (
-        <div key={subKey}>
-          {lines.map((line, index) => (
-            <p className="wrap-break-word" key={`${subKey}-line-${index}`}>
-              {parseOneLine(line, subKey)}
-            </p>
-          ))}
-        </div>
-      );
-    }
-    default: {
-      console.log(`ERROR: unsupported HTML type ${htmlData.type}`);
-      return <></>;
-    }
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function Paragraph({ lines, elementKey }) {
+  return (
+    <div>
+      {lines.map((line, index) => (
+        <p className="wrap-break-word" key={`${elementKey}-line-${index}`}>
+          {parseOneLine(line, elementKey)}
+        </p>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * The component to render for each HTML type in the parser JSON schema.
+ */
+const COMPONENTS_BY_TYPE = {
+  Header,
+  Code,
+  OrderedList,
+  UnorderedList,
+  Table,
+  Paragraph,
+};
+
+/**
+ * Create the JSX Element from given HTML data as JSON.
+ * @param {Object} htmlData The structured JSON HTML data which follows the parser JSON schema.
+ * @param {String} elementKey The key from the parent for React-rendering management.
+ * @returns The JSX element constructed from the formatted HTML data, or null if the type is unsupported.
+ */
+const genHTML = (htmlData, elementKey) => {
+  const { type, ...props } = htmlData;
+  const Component = COMPONENTS_BY_TYPE[type];
+  if (!Component) {
+    console.log(`ERROR: unsupported HTML type ${type}`);
+    return null;
   }
+  const subKey = `${elementKey}-${type}`;
+  return <Component key={subKey} elementKey={subKey} {...props} />;
 };

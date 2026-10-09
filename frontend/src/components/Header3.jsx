@@ -1,3 +1,3 @@
 export default function Header3({ content }) {
-  return <h2 className="text-[1.2m]">{content}</h2>;
+  return <h3 className="text-[1.1em]">{content}</h3>;
 }
