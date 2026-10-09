@@ -20,7 +20,7 @@ export default function parseOneLine(lineContents, elementKey = null) {
   while (currSubLine.length > 0) {
     const first = findLeftMostFeature(
       currSubLine,
-      elementKey === null ? null : `${elementKey}-inline_parsed_item-${index}`
+      elementKey === null ? null : `${elementKey}-inline_parsed_item-${index}`,
     );
     if (first === null) {
       break;
@@ -74,7 +74,7 @@ export function parseParagraphLine(lineContents, elementKey = null) {
  */
 function findLeftMostFeature(currSubLine, elementKey) {
   const parsedOptions = listParsers().map((parser) =>
-    parser.tryParse(currSubLine, elementKey)
+    parser.tryParse(currSubLine, elementKey),
   );
   let earliest = null;
   for (const option of parsedOptions) {

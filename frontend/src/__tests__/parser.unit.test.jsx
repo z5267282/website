@@ -9,7 +9,7 @@ test("parser works with plain text", () => {
 
 test("parser works with link in the middle", async () => {
   const parsed = parseOneLine(
-    "There is info at [this link](https://www.google.com) for some more information"
+    "There is info at [this link](https://www.google.com) for some more information",
   );
   expect(parsed.length).toBe(3);
 
@@ -26,7 +26,7 @@ test("parser works with link in the middle", async () => {
 
 test("parser works with code in the middle", async () => {
   const parsed = parseOneLine(
-    "When using binary search methods from `<algorithm>` the end iterator range is not inclusive."
+    "When using binary search methods from `<algorithm>` the end iterator range is not inclusive.",
   );
   expect(parsed.length).toBe(3);
 
@@ -42,7 +42,7 @@ test("parser works with code in the middle", async () => {
 
 test("parser works with multiple code blocks", async () => {
   const parsed = parseOneLine(
-    "When using `upper_bound` and `lower_bound` from `<algorithm>` the end iterator range is not inclusive."
+    "When using `upper_bound` and `lower_bound` from `<algorithm>` the end iterator range is not inclusive.",
   );
   expect(parsed.length).toBe(7);
 
@@ -73,7 +73,7 @@ test("parser works with multiple code blocks", async () => {
 
 test("parser removes backslashes for escaped brackets", () => {
   const parsed = parseOneLine(
-    "Source \\[1\\] recommends putting `$PATH` setup in `.zshenv`."
+    "Source \\[1\\] recommends putting `$PATH` setup in `.zshenv`.",
   );
   // | text, code, text, code, text with full stop | = 5
   expect(parsed.length).toBe(5);
@@ -92,29 +92,29 @@ test("parser removes backslashes for escaped parentheses", () => {
 
 test("parser removes backslashes for inline code", () => {
   const parsed = parseOneLine(
-    "the backtic looks like \\` - it's to the left of 1 on the keyboard"
+    "the backtic looks like \\` - it's to the left of 1 on the keyboard",
   );
 
   const [text] = parsed;
   expect(text).toBe(
-    "the backtic looks like ` - it's to the left of 1 on the keyboard"
+    "the backtic looks like ` - it's to the left of 1 on the keyboard",
   );
 });
 
 test("parser removes asterisks for bold text", () => {
   const parsed = parseOneLine(
-    "the asterisk looks like \\* - press SHIFT + 8 on the keyboard to find it"
+    "the asterisk looks like \\* - press SHIFT + 8 on the keyboard to find it",
   );
 
   const [text] = parsed;
   expect(text).toBe(
-    "the asterisk looks like * - press SHIFT + 8 on the keyboard to find it"
+    "the asterisk looks like * - press SHIFT + 8 on the keyboard to find it",
   );
 });
 
 test("paragraph line starting with > is rendered as a quote", async () => {
   const { getByText } = render(
-    parseParagraphLine("> The big **car** drove off.")
+    parseParagraphLine("> The big **car** drove off."),
   );
   const quote = getByText("The big", { exact: false });
   await expect.element(quote).toBeInTheDocument();
