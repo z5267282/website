@@ -19,7 +19,7 @@ export default function ParsedMarkdown({ metadata, html, elementKey }) {
       <header className="text-[1.5em] flex justify-center items-center">
         {title}
       </header>
-      <article>
+      <article className="w-full">
         {html.map((htmlData, index) =>
           genHTML(htmlData, genElementKey(elementKey, index)),
         )}
@@ -92,7 +92,7 @@ const genHTML = (htmlData, elementKey) => {
       return (
         <pre
           key={`${elementKey}-code_block`}
-          className="border-[1.25px] border-black p-[10px] overflow-x-scroll"
+          className="border-[1.25px] border-black p-[10px] overflow-x-auto"
         >
           <code className="block">{code.join("\n")}</code>
         </pre>
