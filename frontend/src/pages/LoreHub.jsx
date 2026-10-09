@@ -3,7 +3,7 @@ import { Head } from "vite-react-ssg";
 import { getLoreLanguages, getLoreQwip } from "../content";
 import Header1 from "../components/Header1";
 import AlignedLink from "../components/AlignedLink";
-import AlignedLinkedList from "../components/AlignedLinksList";
+import AlignedLinkList from "../components/AlignedLinkList";
 
 export default function LoreHub() {
   return (
@@ -13,7 +13,7 @@ export default function LoreHub() {
       </Head>
       <Header1 content="Language-Semantic Lore" />
 
-      <AlignedLinkedList>
+      <AlignedLinkList>
         {getLoreLanguages().map((language) => (
           <AlignedLink
             key={language}
@@ -22,7 +22,7 @@ export default function LoreHub() {
             desc={getLoreQwip(language)}
           />
         ))}
-      </AlignedLinkedList>
+      </AlignedLinkList>
     </>
   );
 }

@@ -4,7 +4,7 @@ import Header1 from "../components/Header1";
 import Header2 from "../components/Header2";
 import LogoButton from "../components/LogoButton";
 import AlignedLink from "../components/AlignedLink";
-import AlignedLinkedList from "../components/AlignedLinksList";
+import AlignedLinkList from "../components/AlignedLinkList";
 
 export default function AboutMe() {
   return (
@@ -21,7 +21,7 @@ Some interesting things like Front-End, C++, Rust, Shell Scripting and Security 
 Personally, I like scripting and the joy of spending 3 hours to automate tasks that would take 5 minutes to do manually.
 Enjoy scrolling through!`}
         </div>
-      <AlignedLinkedList>
+      <AlignedLinkList>
         <AlignedLink
           to="/projects"
           linkText="Projects"
@@ -37,7 +37,7 @@ Enjoy scrolling through!`}
           linkText="Lore"
           desc="cool language-specific nuances or details I've run into"
         />
-      </AlignedLinkedList>
+      </AlignedLinkList>
       <Header2 content="Links" styles="mt-[20px]" />
       <ol className="grid w-[calc(48px*3_+_80px)] grid-cols-3">
         <li>
