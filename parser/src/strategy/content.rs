@@ -37,6 +37,9 @@ pub mod paths {
 /// Path of the file holding a one-line qwip for each lore language, relative to the content root.
 const LORE_FILE: &str = "lore/lore.yaml";
 
+/// Name of Markdown files that document a folder rather than hold content, so are never parsed.
+const README_FILE: &str = "README.md";
+
 /// Extension of the Markdown files to parse.
 const MARKDOWN_EXTENSION: &str = "md";
 
@@ -77,6 +80,8 @@ impl Content {
             let path = entry?.path();
             if path.is_dir() {
                 self.dump_dir(&path)?;
+            } else if path.file_name().is_some_and(|name| name == README_FILE) {
+                info!("skipping readme {}", path.display());
             } else if path == self.root.join(LORE_FILE) {
                 self.dump_file(&path, &parse_lore(&path)?)?;
             } else if path
@@ -139,6 +144,7 @@ impl Strategy for Content {
     /// /// The structure will be
     /// /// ```txt
     /// /// root/
+    /// ///     + README.md
     /// ///     blog/
     /// ///         + example-blog.md
     /// ///     lore/
@@ -157,6 +163,7 @@ impl Strategy for Content {
     ///     write(shell.join("example-lore.md"), contents).expect("could not write lore");
     ///     write(root.path().join("lore").join("lore.yaml"), "shell: POSIX is a lie :)\n")
     ///         .expect("could not write lore file");
+    ///     write(root.path().join("README.md"), "# Not content").expect("could not write readme");
     ///     root
     /// }
     ///
@@ -186,6 +193,8 @@ impl Strategy for Content {
     ///
     /// let lore = read_to_string(output.path().join("lore/lore.json")).expect("could not read lore");
     /// assert_eq!(lore, r#"{"shell":"POSIX is a lie :)"}"#);
+    ///
+    /// assert!(!output.path().join("README.json").exists());
     /// ```
     fn run(&self) -> Result<(), Box<dyn Error>> {
         info!(

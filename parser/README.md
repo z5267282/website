@@ -32,6 +32,9 @@ content/
         + lore.yaml
 ```
 
+Any file named `README.md`, at any depth, is ignored so that folders can be
+documented without being parsed as content.
+
 The output is generated, so it should not be committed. It lives in `src/`
 rather than `public/` so that Vite bundles it into the pages that
 `vite-react-ssg` pre-renders.
