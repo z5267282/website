@@ -1,4 +1,4 @@
-#!/usr/bin/env dash
+#!/bin/sh
 
 # run in root-level of frontend folder
 # go back to root-level of website
