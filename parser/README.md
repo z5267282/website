@@ -1,17 +1,45 @@
 # Overview
 
-This is a markdown parser for Markdown test, written in Rust.  
-The full json schema is written [here](./json_schema.md).
+This crate parses Markdown text into structured JSON. The full json schema is
+written [here](./json_schema.md).
 
-This command will create the file `../website/public/blogs.json`.
+The content must be fetched before the parser can be run. From the `frontend/`
+folder, run the following to download it into `frontend/content/`.
+
+```sh
+npm run fetch
+```
+
+Then, from this folder, this command parses the whole `../frontend/content/`
+folder into `../frontend/src/content/`.
 
 ```sh
 cargo run
 ```
 
-## Options
+## Content Structure
 
-To add logging, prefix with this argument.
+By default the parser is built around the fixed layout of the `content/`
+folder, so it relies on that layout being followed.
+
+```txt
+content/
+    blog/
+        + interesting-topic.md
+    lore/
+        :lang/
+            + langauge-semantic topic.md
+        + lore.yaml
+```
+
+The output is generated, so it should not be committed. It lives in `src/`
+rather than `public/` so that Vite bundles it into the pages that
+`vite-react-ssg` pre-renders.
+
+## Flags
+
+To add logging the `RUST_LOG` environment variable needs to be set. For
+convenience, this Shell script can be used to run with logs after building.
 
 ```sh
 RUST_LOG=info ./target/debug/parser
@@ -23,18 +51,44 @@ To turn on pretty printing, add this argument.
 cargo run -- --pretty
 ```
 
-# Formatting
+### Standalone
 
-It is expected there is a blank line to end a particular markdown feature.
+To parse a single Markdown file instead of the whole content folder, pass a
+source Markdown file and a destination JSON file. Both must be given together.
 
-# Supported Markdown Language Features
+```sh
+cargo run -- path/to/file.md path/to/file.json
+```
 
-Not all language features are supported.  
-The full list of features was taken from [markdownguide](https://www.markdownguide.org/basic-syntax/).
+The file must have the usual frontmatter. The destination's folder must already
+exist, and an existing file there is overwritten. Other flags such as
+`--pretty` still apply.
 
-## Supported - ✅
+## Supported Markdown Language Features
 
-### Headings
+Not all language features are supported. The full list of features was taken
+from [markdownguide](https://www.markdownguide.org/basic-syntax/).
+
+The parser runs on the following expectations:
+
+- there is a blank line to end a particular markdown feature;
+- the Markdown has been correctly formatted
+
+### Frontmatter
+
+All Markdown files are expected to contain the following frontmatter.
+
+```yaml
+title: title of document to show on screen
+date: yyyy-mm-dd
+description: brief description of file
+```
+
+The frontmatter should be enclosed with `---` and be at the top of the file.
+
+### Supported - ✅
+
+#### Headings
 
 These must start with leading `'#'` characters followed by one spacebar `' '`.  
 There must also be a blank line before and after a heading.
@@ -45,7 +99,7 @@ There must also be a blank line before and after a heading.
 
 ```
 
-### Paragraphs and Line Breaks
+#### Paragraphs and Line Breaks
 
 A blank line is needed to separate paragraphs.  
 Two lines forces a newline.
@@ -57,7 +111,7 @@ Paragraph 1 sentence 2.
 Paragraph 2.
 ```
 
-### Ordered Lists
+#### Ordered Lists
 
 These must start with a number and then a `'.'`.  
 It is assumed that the lists are correctly enumerated from `[1,n]` for an `n`-sized list.
@@ -67,7 +121,7 @@ It is assumed that the lists are correctly enumerated from `[1,n]` for an `n`-si
 2. two
 ```
 
-### Unordered Lists
+#### Unordered Lists
 
 These must start with `'- '`.
 
@@ -76,11 +130,11 @@ These must start with `'- '`.
 - orange
 ```
 
-### Code Blocks
+#### Code Blocks
 
-If a language is provided it must be directly after the ` "```" `.
+If a language is provided it must be directly after the `"```"`.
 
-### Tables
+#### Tables
 
 Tables must be formatted like so.
 
@@ -101,24 +155,20 @@ All content has its leading and trailing whitespace trimmed so the rows above ar
 ]
 ```
 
-## Frontend Rendered
+### Frontend Rendered
 
-These are supported if nested inside a paragraph.  
-They will be parsed by the frontend as they only involve simple single-line string manipulations.
+These are supported if nested inside a paragraph. They will be rendered by the
+frontend as they only involve simple single-line string manipulations.
 
 - Links
 - Bold Text, where asterisks are used `** bold text **`
 - Inline Code Bacticks
+- Quotes, where a line starts with `>`
 
-## Unsupported - ❌
+### Unsupported - ❌
 
 - Italic Text
 - Strikethrough
-- Blockquotes
 - Horizontal Rules
 - Images
 - HTML
-
-# Assumptions
-
-It is assumed that the Markdown is correctly formatted.

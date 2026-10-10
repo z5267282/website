@@ -1,0 +1,50 @@
+import { Link, useMatch } from "react-router-dom";
+
+export default function NavBar() {
+  return (
+    <nav className="bg-(--nav-colour) grid grid-cols-[3rem_1fr] md:grid-cols-[1fr_60%_1fr]">
+      <HomeButton />
+      <ol className="flex flex-row justify-center">
+        <Tab path="/projects" contents="projects" />
+        <Tab path="/blogs" contents="blogs" />
+        <Tab path="/lore" contents="lore" />
+      </ol>
+      <div className="hidden md:block border-b-[1.25px] border-black"></div>
+    </nav>
+  );
+}
+
+function HomeButton() {
+  return (
+    <div className="border-b-[1.25px] border-black hover:border-b-[2px] hover:border-b-blue-600">
+      <Link
+        to="/"
+        className="block w-full h-full bg-black hover:bg-yellow-400
+             [mask:url(/favicon.svg)_center/auto_75%_no-repeat]"
+      />
+    </div>
+  );
+}
+
+/**
+ * A component that centers text within a tab cell in the navigation bar.
+ * @prop: path: string - path from root that the tab redirects to.
+ * @prop: contents: string - what the tab displays.
+ */
+function Tab({ path, contents }) {
+  let classes =
+    "list-none w-full h-full flex justify-center items-center border-black border-b-[1.25px] hover:border-b-[2px] hover:font-bold hover:border-b-blue-600";
+  if (useMatch(`${path}/*`)) {
+    classes += " bg-(--tab-selected-colour)";
+  }
+  return (
+    <li className={classes}>
+      <Link
+        className="w-full h-full flex justify-center items-center"
+        to={path}
+      >
+        {contents}
+      </Link>
+    </li>
+  );
+}

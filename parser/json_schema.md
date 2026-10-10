@@ -14,11 +14,11 @@ The parser will dump all markdown contents as a JSON object with this structure
 }
 ```
 
-# Objects
+## Object Structres
 
 Each HTMLElement will be mapped to the following object structure.
 
-## Header
+### Heading
 
 ```txt
 {
@@ -28,7 +28,34 @@ Each HTMLElement will be mapped to the following object structure.
 }
 ```
 
-## Code
+### Paragraph
+
+```
+{
+    "type" : "Paragraph",
+    "lines" : [<string of content where trailing "  " has been stripped>]
+}
+```
+
+### Ordered List
+
+```
+{
+    "type" : "OrderedList",
+    "list" : [<string of list items where index has been stripped>]
+}
+```
+
+### Unordered List
+
+```
+{
+    "type" : "UnorderedList",
+    "list" : [<string of list items where leading "- " has been stripped>]
+}
+```
+
+### Code Block
 
 ```
 {
@@ -38,29 +65,12 @@ Each HTMLElement will be mapped to the following object structure.
 }
 ```
 
-## Ordered List
+### Table
 
 ```
 {
-    "type" : "OrderedList",
-    "list" : [<string of list items where index has been stripped>]
-}
-```
-
-## Unordered List
-
-```
-{
-    "type" : "UnorderedList",
-    "list" : [<string of list items where leading "- " has been stripped>]
-}
-```
-
-## Paragraph
-
-```
-{
-    "type" : "Paragraph",
-    "lines" : [<string of content where trailing "  " has been stripped>]
+    "type": "Table",
+    "headers": [<string of header columns>],
+    "rows": [[<string of columns>]],
 }
 ```

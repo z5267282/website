@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+:root {
+  --nav-height: 35px;
+  --page-header-padding: 30px;
+  --nav-colour: #e2edff;
+  --tab-selected-colour: #afcdff;
+  --site-background-colour: rgb(242, 242, 242);
+}
+
+html {
+  background-color: var(--site-background-colour);
+}
+
+/* PT Serif - latin */
+@font-face {
+  font-display: swap;
+  font-family: "PT Serif";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/pt-serif-v19-latin-regular.woff2") format("woff2");
+}
+
+@layer base {
+  body {
+    font-size: 12.5pt;
+  }
+}
+
+@theme {
+  --default-font-family: "PT Serif", serif;
+}
