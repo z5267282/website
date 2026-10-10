@@ -18,6 +18,17 @@ pre-compiled WebAssembly build of the parser, and then pre-rendered into a
 static site. The whole pipeline runs with `npm run build:site` from
 `frontend/`. See the [frontend README](./frontend/README.md) for details.
 
+## Setup
+
+The pre-compiled parser, `frontend/bin/parser.wasm`, is kept in sync with the
+parser's source by a pre-commit hook. Whenever a commit changes `parser/src/`
+or `parser/Cargo.toml`, the hook rebuilds the binary and adds it to the commit.
+Enable it once per clone with the following command.
+
+```sh
+git config core.hooksPath .githooks
+```
+
 ## Frontend Rendered Features
 
 Some Markdown features are rendered by the frontend rather than the parser.

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# git runs hooks from the root-level of the repository
+# stop at the first failing step, which also blocks the commit
+set -e
+
+# only rebuild when staged changes touch the parser's source
+if git diff --cached --name-only | grep -qE '^parser/(src/|Cargo\.toml$)'
+then
+  echo "parser changed, rebuilding parser.wasm"
+
+  # rebuild the binary the same way npm run build:parser does
+  (cd frontend && ./scripts/build-parser.sh)
+
+  # include the rebuilt binary in this commit
+  git add frontend/bin/parser.wasm
+fi
