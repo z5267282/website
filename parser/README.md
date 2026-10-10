@@ -3,7 +3,15 @@
 This crate parses Markdown text into structured JSON. The full json schema is
 written [here](./json_schema.md).
 
-This command parses the whole `../content/` folder into `../frontend/src/content/`.
+The content must be fetched before the parser can be run. From the `frontend/`
+folder, run the following to download it into `frontend/content/`.
+
+```sh
+npm run fetch
+```
+
+Then, from this folder, this command parses the whole `../frontend/content/`
+folder into `../frontend/src/content/`.
 
 ```sh
 cargo run
@@ -42,6 +50,19 @@ To turn on pretty printing, add this argument.
 ```sh
 cargo run -- --pretty
 ```
+
+### Standalone
+
+To parse a single Markdown file instead of the whole content folder, pass a
+source Markdown file and a destination JSON file. Both must be given together.
+
+```sh
+cargo run -- path/to/file.md path/to/file.json
+```
+
+The file must have the usual frontmatter. The destination's folder must already
+exist, and an existing file there is overwritten. Other flags such as
+`--pretty` still apply.
 
 ## Supported Markdown Language Features
 

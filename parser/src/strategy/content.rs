@@ -28,7 +28,7 @@ use crate::parse::dump::dump_to_str;
 /// Paths for dump files where `parser/`` is considered as current folder
 pub mod paths {
     /// Root of the content folder, stored in Markdown format.
-    pub const ROOT: &str = "../content";
+    pub const ROOT: &str = "../frontend/content";
 
     /// Folder that mirrors the content folder, holding the parsed JSON files.
     pub const OUTPUT_DIR: &str = "../frontend/src/content";

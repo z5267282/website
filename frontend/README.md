@@ -1,12 +1,34 @@
-# React + Vite
+# Overview
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The website, built as a static site with
+[`vite-react-ssg`](https://github.com/Daydreamer-riri/vite-react-ssg).
 
-Currently, two official plugins are available:
+## Build Pipeline
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The site is built from Markdown content in three steps.
 
-## Expanding the ESLint configuration
+1. **Fetch** - `scripts/fetch-content.sh` downloads the
+   [content repository](https://github.com/z5267282/content) into `content/`.
+2. **Parse** - `scripts/parse-content.mjs` runs the pre-compiled parser,
+   `bin/parser.wasm`, over `content/` and writes JSON into `src/content/`.
+3. **Build** - `vite-react-ssg` pre-renders the pages from `src/content/`.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The parser is compiled to WebAssembly so the build only needs Node, not Rust.
+Both `content/` and `src/content/` are generated and should not be committed.
+
+## Scripts
+
+| Command                | Description                                                   |
+| ---------------------- | ------------------------------------------------------------- |
+| `npm run dev`          | Starts the development server.                                |
+| `npm run build`        | Pre-renders the site into `dist/`.                            |
+| `npm run fetch`        | Downloads the content into `content/`.                        |
+| `npm run parse`        | Parses `content/` into `src/content/` with `bin/parser.wasm`. |
+| `npm run build:site`   | Runs the full pipeline: `fetch`, then `parse`, then `build`.  |
+| `npm run build:parser` | Recompiles `bin/parser.wasm` from `../parser`. Needs Rust.    |
+| `npm run preview`      | Serves the built site locally.                                |
+| `npm run lint`         | Lints the code with ESLint.                                   |
+| `npm run test`         | Runs the tests with Vitest.                                   |
+
+`npm run build:parser` must be rerun whenever the parser changes, so that
+`bin/parser.wasm` stays up to date.

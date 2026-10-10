@@ -1,8 +1,7 @@
 #!/bin/sh
 
 # run in root-level of frontend folder
-# go back to root-level of website
-cd ..
+# content is kept inside the frontend, as Vercel cannot read files outside it
 
 [ -d content ] && rm -rf content
 mkdir content

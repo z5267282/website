@@ -9,7 +9,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
-    "fetch": "./scripts/fetch-content.sh"
+    "fetch": "./scripts/fetch-content.sh",
+    "build:parser": "./scripts/build-parser.sh",
+    "parse": "node scripts/parse-content.mjs",
+    "build:site": "npm run fetch && npm run parse && npm run build"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
